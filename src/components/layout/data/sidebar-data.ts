@@ -63,6 +63,11 @@ export const sidebarData: SidebarData = {
           icon: ListTodo,
         },
         {
+          title: 'Sport category',
+          url: '/sport-categories',
+          icon: ListTodo,
+        },
+        {
           title: 'Apps',
           url: '/apps',
           icon: Package,
