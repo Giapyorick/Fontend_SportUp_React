@@ -28,11 +28,11 @@ export const updateCategory = async (id: number, data: CreateCategoryDto) => {
   }
 
   // eslint-disable-next-line no-console
-  console.log(payload);
+  console.log(payload)
 
-  const response = await api.put(`/SportCategories/${id}`, payload);
+  const response = await api.put(`/SportCategories/${id}`, payload)
 
-  return response.data;
+  return response.data
 }
 
 // delete a sportcategory
@@ -53,7 +53,7 @@ export const deleteMultipleCategory = async (ids: number[]) => {
 
 export const importSportCategories = async (file: File) => {
   const formData = new FormData()
-  formData.append('file', file) 
+  formData.append('file', file)
 
   const response = await api.post('/SportCategories/import', formData, {
     headers: {
