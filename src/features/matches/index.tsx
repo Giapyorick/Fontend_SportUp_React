@@ -1,23 +1,22 @@
 import { useEffect, useState, useCallback } from 'react'
-import { getCategory } from '@/api/categories-api'
+import { getMatches } from '@/api/matches-api'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { CategoriesDialogs } from './components/categories-dialogs'
-import { CategoriesPrimaryButtons } from './components/categories-primary-buttons'
-import { CategoryProvider } from './components/categories-provider'
-import { CategoriesTable } from './components/categories-table'
-import { type Category } from './data/schema' 
+import { MatchesDialogs } from './components/matches-dialogs'
+import { MatchesPrimaryButtons } from './components/matches-primary-buttons'
+import { MatchProvider } from './components/matches-provider'
+import { MatchesTable } from './components/matches-table'
+import { type Match } from './data/schema' 
 
-export function Categories() {
-  const [data, setData] = useState<Category[]>([])
+export function Matches() {
+  const [data, setData] = useState<Match[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshIndex, setRefreshIndex] = useState(0)
 
-  // Callback làm trigger refetch cho onSuccess
   const handleSuccess = useCallback(() => {
     setRefreshIndex((prev) => prev + 1)
   }, [])
@@ -27,12 +26,15 @@ export function Categories() {
 
     async function load() {
       try {
-        const result = await getCategory()
+        const result = await getMatches()
         if (!ignore) {
-          const formattedData: Category[] = result.map((item) => ({
+          const formattedData: Match[] = result.map((item) => ({
             ...item,
-            description: item.description ?? '',
-            status: item.status ?? 'active',
+            id: item.id ?? 0,
+            note: item.note ?? '',
+            totalSlots: item.totalSlots ?? 0,
+            availableSlots: item.availableSlots ?? 0,
+            pricePerSlot: item.pricePerSlot ?? 0,
           }))
           setData(formattedData)
         }
@@ -54,7 +56,7 @@ export function Categories() {
   }, [refreshIndex])
 
   return (
-    <CategoryProvider>
+    <MatchProvider>
       <Header fixed>
         <Search className='me-auto' />
         <ThemeSwitch />
@@ -72,17 +74,17 @@ export function Categories() {
               Here&apos;s a list of sport categories!
             </p>
           </div>
-          <CategoriesPrimaryButtons />
+          <MatchesPrimaryButtons />
         </div>
 
         {loading ? (
           <div>Loading data...</div>
         ) : (
-          <CategoriesTable data={data} onSuccess={handleSuccess} />
+          <MatchesTable data={data} onSuccess={handleSuccess} />
         )}
       </Main>
 
-      <CategoriesDialogs onSuccess={handleSuccess} />
-    </CategoryProvider>
+      <MatchesDialogs onSuccess={handleSuccess} />
+    </MatchProvider>
   )
 }

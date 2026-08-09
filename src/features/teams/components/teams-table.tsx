@@ -24,21 +24,26 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { statuses } from '../data/data'
-import { type Category } from '../data/schema'
-import { categoriesColumns as columns } from './categories-columns'
+import { type Team } from '../data/schema'
+import { teamsColumns as columns } from './teams-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 
-const route = getRouteApi('/_authenticated/sport-categories/')
+const route = getRouteApi('/_authenticated/teams/')
 
 type DataTableProps = {
-  data: Category[]
+  data: Team[]
   onSuccess?: () => void | Promise<void>
 }
 
-export function CategoriesTable({ data, onSuccess }: DataTableProps) {
+export function TeamsTable({ data, onSuccess }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+
+  // ✅ 1. Tự động reset lựa chọn các dòng khi danh sách data thay đổi (tránh dính cache dòng bị xóa)
+  useEffect(() => {
+    setRowSelection({})
+  }, [data])
 
   const {
     globalFilter,
@@ -50,7 +55,7 @@ export function CategoriesTable({ data, onSuccess }: DataTableProps) {
     ensurePageInRange,
   } = useTableUrlState({
     search: route.useSearch(),
-    navigate: route.useNavigate(),
+    navigate: route.useNavigate() as never,
 
     pagination: {
       defaultPage: 1,
@@ -84,6 +89,9 @@ export function CategoriesTable({ data, onSuccess }: DataTableProps) {
       pagination,
     },
 
+    // ✅ 2. Bắt buộc TanStack Table tự động cập nhật lại khi mảng data thay đổi
+    autoResetPageIndex: false,
+
     enableRowSelection: true,
 
     onRowSelectionChange: setRowSelection,
@@ -93,10 +101,15 @@ export function CategoriesTable({ data, onSuccess }: DataTableProps) {
     globalFilterFn: (row, _columnId, filterValue) => {
       const id = String(row.getValue('id')).toLowerCase()
       const name = String(row.getValue('name')).toLowerCase()
+      const description = String(row.getValue('description') ?? '').toLowerCase()
 
       const search = String(filterValue).toLowerCase()
 
-      return id.includes(search) || name.includes(search)
+      return (
+        id.includes(search) ||
+        name.includes(search) ||
+        description.includes(search)
+      )
     },
 
     getCoreRowModel: getCoreRowModel(),
@@ -126,7 +139,7 @@ export function CategoriesTable({ data, onSuccess }: DataTableProps) {
     >
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Filter by name or ID...'
+        searchPlaceholder='Filter teams by name or ID...'
         filters={[
           {
             columnId: 'status',
@@ -191,7 +204,7 @@ export function CategoriesTable({ data, onSuccess }: DataTableProps) {
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No results.
+                  No teams found.
                 </TableCell>
               </TableRow>
             )}

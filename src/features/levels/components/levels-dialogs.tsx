@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { deleteCategory } from '@/api/categories-api'
+import { deleteLevel } from '@/api/levels-api'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { CategoriesImportDialog } from './categories-import-dialog'
-import { CategoriesMutateDrawer } from './categories-mutate-drawer'
-import { useCategories } from './categories-provider'
+import { LevelsImportDialog } from './levels-import-dialog'
+import { LevelsMutateDrawer } from './levels-mutate-drawer'
+import { useLevels } from './levels-provider'
 
-type CategoriesDialogsProps = {
+type LevelsDialogsProps = {
   onSuccess?: () => void | Promise<void> 
 }
 
-export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
-  const { open, setOpen, currentRow, setCurrentRow } = useCategories()
+export function LevelsDialogs({ onSuccess }: LevelsDialogsProps) {
+  const { open, setOpen, currentRow, setCurrentRow } = useLevels()
   const [isLoading, setIsLoading] = useState(false)
 
   // The function handles deleting data.
@@ -20,7 +20,7 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
 
     setIsLoading(true)
     try {
-      await deleteCategory(currentRow.id)
+      await deleteLevel(currentRow.id)
 
       toast.success(`Deleted successfully id : ${currentRow.id}`)
 
@@ -43,15 +43,15 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
 
   return (
     <>
-      <CategoriesMutateDrawer
-        key='category-create'
+      <LevelsMutateDrawer
+        key='level-create'
         open={open === 'create'}
         onOpenChange={(isOpen) => setOpen(isOpen ? 'create' : null)}
         onSuccess={onSuccess}
       />
 
-      <CategoriesImportDialog
-        key='categories-import'
+      <LevelsImportDialog
+        key='levels-import'
         open={open === 'import'}
         onOpenChange={(isOpen) => setOpen(isOpen ? 'import' : null)}
         onSuccess={onSuccess}
@@ -61,8 +61,8 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
       {currentRow && (
         <>
           {/* Drawer Update */}
-          <CategoriesMutateDrawer
-            key={`category-update-${currentRow.id}`}
+          <LevelsMutateDrawer
+            key={`level-update-${currentRow.id}`}
             open={open === 'update'}
             onOpenChange={(isOpen) => {
               if (!isOpen) {
@@ -73,12 +73,12 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
               }
             }}
             currentRow={currentRow}
-            onSuccess={onSuccess}
+            onSuccess={onSuccess} 
           />
 
           {/* Delete confirmation Dialog */}
           <ConfirmDialog
-            key={`category-delete-${currentRow.id}`}
+            key={`level-delete-${currentRow.id}`}
             destructive
             open={open === 'delete'}
             onOpenChange={(isOpen) => {

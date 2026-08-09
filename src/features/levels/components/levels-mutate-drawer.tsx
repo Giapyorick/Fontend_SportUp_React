@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
-import { createCategory, updateCategory } from '@/api/categories-api'
+import { createLevel, updateLevel } from '@/api/levels-api'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -25,14 +25,13 @@ import {
 } from '@/components/ui/sheet'
 import { Textarea } from '@/components/ui/textarea'
 import { SelectDropdown } from '@/components/select-dropdown'
-// import { showSubmittedData } from '@/lib/show-submitted-data'
-import { type Category } from '../data/schema'
+import { type Level } from '../data/schema'
 
-type CategoriesMutateDrawer = {
+type LevelsMutateDrawerProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  currentRow?: Category
-  onSuccess?: () => void | Promise<void>
+  currentRow?: Level
+  onSuccess?: () => void | Promise<void> 
 }
 
 const formSchema = z.object({
@@ -41,18 +40,18 @@ const formSchema = z.object({
   status: z.string().min(1, 'Please select a status.'),
 })
 
-type CategoryForm = z.infer<typeof formSchema>
+type LevelForm = z.infer<typeof formSchema>
 
-export function CategoriesMutateDrawer({
+export function LevelsMutateDrawer({
   open,
   onOpenChange,
   currentRow,
-  onSuccess
-}: CategoriesMutateDrawer) {
+  onSuccess, 
+}: LevelsMutateDrawerProps) {
   const isUpdate = !!currentRow
   const [loading, setLoading] = useState(false)
 
-  const form = useForm<CategoryForm>({
+  const form = useForm<LevelForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
@@ -77,16 +76,16 @@ export function CategoriesMutateDrawer({
     }
   }, [currentRow, form, open])
 
-  const onSubmit = async (data: CategoryForm) => {
+  const onSubmit = async (data: LevelForm) => {
     setLoading(true)
     try {
       if (isUpdate && currentRow) {
         // --- 1. UPDATE (PUT) ---
-        await updateCategory(currentRow.id, data)
+        await updateLevel(currentRow.id, data)
         toast?.success('Updated successfully!')
       } else {
         // --- 2. CREATE (POST) ---
-        await createCategory(data)
+        await createLevel(data)
         toast?.success('Created successfully!')
       }
 
@@ -120,7 +119,7 @@ export function CategoriesMutateDrawer({
 
         <Form {...form}>
           <form
-            id='categories-form'
+            id='levels-form'
             onSubmit={form.handleSubmit(onSubmit)}
             className='flex-1 space-y-6 overflow-y-auto px-4'
           >
@@ -188,7 +187,7 @@ export function CategoriesMutateDrawer({
             </Button>
           </SheetClose>
 
-          <Button form='categories-form' type='submit' disabled={loading}>
+          <Button form='levels-form' type='submit' disabled={loading}>
             {loading ? 'Saving...' : 'Save changes'}
           </Button>
         </SheetFooter>

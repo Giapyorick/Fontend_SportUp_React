@@ -4,27 +4,27 @@ import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
-import { deleteMultipleCategory } from '@/api/categories-api'
+import { deleteMultipleLevels } from '@/api/levels-api'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 
-type CategoryMultiDeleteDialogProps<TData> = {
+type LevelMultiDeleteDialogProps<TData> = {
   open: boolean
   onOpenChange: (open: boolean) => void
   table: Table<TData>
-  onSuccess?: () => void | Promise<void>
+  onSuccess?: () => void | Promise<void> 
 }
 
 const CONFIRM_WORD = 'DELETE'
 
-export function CategoriesMultiDeleteDialog<TData>({
+export function LevelsMultiDeleteDialog<TData>({
   open,
   onOpenChange,
   table,
-  onSuccess
-}: CategoryMultiDeleteDialogProps<TData>) {
+  onSuccess, 
+}: LevelMultiDeleteDialogProps<TData>) {
   const [value, setValue] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -48,9 +48,9 @@ export function CategoriesMultiDeleteDialog<TData>({
     setLoading(true)
 
     try {
-      await deleteMultipleCategory(selectedIds)
+      await deleteMultipleLevels(selectedIds)
 
-      toast.success(`Deleted successfully ${selectedIds.length} mục.`)
+      toast.success(`Deleted successfully ${selectedIds.length} items.`)
 
       setValue('')
       table.resetRowSelection()
@@ -62,7 +62,7 @@ export function CategoriesMultiDeleteDialog<TData>({
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('An error occurred while mutiple delete:', error)
-      toast.error(' An error occurred while deleting the selected items !')
+      toast.error('An error occurred while deleting the selected items !')
     } finally {
       setLoading(false)
     }
@@ -75,7 +75,7 @@ export function CategoriesMultiDeleteDialog<TData>({
         onOpenChange(v)
         if (!v) setValue('')
       }}
-      form='categories-multi-delete-form'
+      form='levels-multi-delete-form'
       disabled={value.trim() !== CONFIRM_WORD || loading}
       isLoading={loading}
       title={
@@ -85,12 +85,12 @@ export function CategoriesMultiDeleteDialog<TData>({
             size={18}
           />{' '}
           Delete {selectedRows.length}{' '}
-          {selectedRows.length > 1 ? 'categories' : 'category'}
+          {selectedRows.length > 1 ? 'levels' : 'level'}
         </span>
       }
       desc={
         <form
-          id='categories-multi-delete-form'
+          id='levels-multi-delete-form'
           onSubmit={(e) => {
             e.preventDefault()
             handleDelete()
@@ -98,7 +98,7 @@ export function CategoriesMultiDeleteDialog<TData>({
           className='space-y-4'
         >
           <p className='mb-2'>
-            Are you sure you want to delete the selected categories? <br />
+            Are you sure you want to delete the selected levels? <br />
             This action cannot be undone.
           </p>
 

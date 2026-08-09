@@ -1,19 +1,19 @@
 import { useEffect, useState, useCallback } from 'react'
-import { getCategory } from '@/api/categories-api'
+import { getVenues } from '@/api/venues-api'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { CategoriesDialogs } from './components/categories-dialogs'
-import { CategoriesPrimaryButtons } from './components/categories-primary-buttons'
-import { CategoryProvider } from './components/categories-provider'
-import { CategoriesTable } from './components/categories-table'
-import { type Category } from './data/schema' 
+import { VenuesDialogs } from './components/venues-dialogs'
+import { VenuesPrimaryButtons } from './components/venues-primary-buttons'
+import { VenueProvider } from './components/venues-provider'
+import { VenuesTable } from './components/venues-table'
+import { type Venue } from './data/schema'
 
-export function Categories() {
-  const [data, setData] = useState<Category[]>([])
+export function Venues() {
+  const [data, setData] = useState<Venue[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshIndex, setRefreshIndex] = useState(0)
 
@@ -27,12 +27,13 @@ export function Categories() {
 
     async function load() {
       try {
-        const result = await getCategory()
+        const result = await getVenues()
         if (!ignore) {
-          const formattedData: Category[] = result.map((item) => ({
+          const formattedData: Venue[] = result.map((item) => ({
             ...item,
-            description: item.description ?? '',
-            status: item.status ?? 'active',
+            address: item.address ?? '',
+            mapUrl: item.mapUrl ?? '', 
+            status: item.status ?? 'Active', 
           }))
           setData(formattedData)
         }
@@ -54,7 +55,7 @@ export function Categories() {
   }, [refreshIndex])
 
   return (
-    <CategoryProvider>
+    <VenueProvider>
       <Header fixed>
         <Search className='me-auto' />
         <ThemeSwitch />
@@ -72,17 +73,17 @@ export function Categories() {
               Here&apos;s a list of sport categories!
             </p>
           </div>
-          <CategoriesPrimaryButtons />
+          <VenuesPrimaryButtons />
         </div>
 
         {loading ? (
           <div>Loading data...</div>
         ) : (
-          <CategoriesTable data={data} onSuccess={handleSuccess} />
+          <VenuesTable data={data} onSuccess={handleSuccess} />
         )}
       </Main>
 
-      <CategoriesDialogs onSuccess={handleSuccess} />
-    </CategoryProvider>
+      <VenuesDialogs onSuccess={handleSuccess} />
+    </VenueProvider>
   )
 }

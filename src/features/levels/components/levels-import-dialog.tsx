@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
-import { importSportCategories } from '@/api/categories-api'
+import { importLevels } from '@/api/levels-api'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -48,17 +48,17 @@ const formSchema = z.object({
     }, 'Please upload Excel format (.xlsx, .xls).'),
 })
 
-type CategoryImportDialogProps = {
+type LevelImportDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSuccess?: () => void | Promise<void>
+  onSuccess?: () => void | Promise<void> 
 }
 
-export function CategoriesImportDialog({
+export function LevelsImportDialog({
   open,
   onOpenChange,
   onSuccess
-}: CategoryImportDialogProps) {
+}: LevelImportDialogProps) {
   const [loading, setLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -80,7 +80,7 @@ export function CategoriesImportDialog({
     setLoading(true)
 
     try {
-      const res = await importSportCategories(selectedFile)
+      const res = await importLevels(selectedFile)
 
       toast.success(res.message || 'Import Excel successfully!')
 
@@ -108,15 +108,15 @@ export function CategoriesImportDialog({
     >
       <DialogContent className='gap-2 sm:max-w-sm'>
         <DialogHeader className='text-start'>
-          <DialogTitle>Import Sport Categories</DialogTitle>
+          <DialogTitle>Import Levels</DialogTitle>
           <DialogDescription>
-            Import categories quickly from an Excel file (.xlsx, .xls).
+            Import levels quickly from an Excel file (.xlsx, .xls).
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form
-            id='category-import-form'
+            id='level-import-form'
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <FormField
@@ -147,7 +147,7 @@ export function CategoriesImportDialog({
               Close
             </Button>
           </DialogClose>
-          <Button type='submit' form='category-import-form' disabled={loading}>
+          <Button type='submit' form='level-import-form' disabled={loading}>
             {loading ? 'Importing...' : 'Import'}
           </Button>
         </DialogFooter>

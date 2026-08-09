@@ -24,18 +24,18 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { statuses } from '../data/data'
-import { type Category } from '../data/schema'
-import { categoriesColumns as columns } from './categories-columns'
+import { type Venue } from '../data/schema'
+import { venuesColumns as columns } from './venues-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 
-const route = getRouteApi('/_authenticated/sport-categories/')
+const route = getRouteApi('/_authenticated/venues/')
 
 type DataTableProps = {
-  data: Category[]
+  data: Venue[]
   onSuccess?: () => void | Promise<void>
 }
 
-export function CategoriesTable({ data, onSuccess }: DataTableProps) {
+export function VenuesTable({ data, onSuccess }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})

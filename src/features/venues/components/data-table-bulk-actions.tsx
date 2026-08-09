@@ -18,8 +18,8 @@ import {
 } from '@/components/ui/tooltip'
 import { DataTableBulkActions as BulkActionsToolbar } from '@/components/data-table'
 import { statuses } from '../data/data'
-import { type Category } from '../data/schema'
-import { CategoriesMultiDeleteDialog } from './categories-multi-delete-dialog'
+import { type Venue } from '../data/schema'
+import { VenuesMultiDeleteDialog } from './venues-multi-delete-dialog'
 
 type DataTableBulkActionsProps<TData> = {
   table: Table<TData>
@@ -34,14 +34,14 @@ export function DataTableBulkActions<TData>({
   const selectedRows = table.getFilteredSelectedRowModel().rows
 
   const handleBulkStatusChange = (status: string) => {
-    const selectedCategories = selectedRows.map(
-      (row) => row.original as Category
+    const selectedVenues = selectedRows.map(
+      (row) => row.original as Venue
     )
     toast.promise(sleep(2000), {
       loading: 'Updating status...',
       success: () => {
         table.resetRowSelection()
-        return `Status updated to "${status}" for ${selectedCategories.length} categor${selectedCategories.length > 1 ? 'ies' : 'y'}.`
+        return `Status updated to "${status}" for ${selectedVenues.length} venue${selectedVenues.length > 1 ? 's' : ''}.`
       },
       error: 'Error',
     })
@@ -50,37 +50,37 @@ export function DataTableBulkActions<TData>({
 
   const handleBulkExport = () => {
     // 1. Get a list of selected rows
-    const selectedCategories = selectedRows.map(
-      (row) => row.original as Category
+    const selectedVenues = selectedRows.map(
+      (row) => row.original as Venue
     )
 
-    if (selectedCategories.length === 0) {
+    if (selectedVenues.length === 0) {
       toast.error('please select aleast 1 row to export!')
       return
     }
 
     try {
       // 2. Convert JSON data from selected rows to a sheet.
-      const exportData = selectedCategories.map((item) => ({
+      const exportData = selectedVenues.map((item) => ({
         ID: item.id,
-        'Tên danh mục': item.name,
-        'Mô tả': item.description,
-        'Trạng thái': item.status ?? 'Active',
+        'Name': item.name,
+        'Address': item.address,
+        'Status': item.status ?? 'Active',
       }))
 
       const worksheet = XLSX.utils.json_to_sheet(exportData)
       const workbook = XLSX.utils.book_new()
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'SportCategories')
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Venues')
 
       // 3. download file .xlsx
-      const fileName = `SportCategories_Export_${new Date().getTime()}.xlsx`
+      const fileName = `Venues_Export_${new Date().getTime()}.xlsx`
       XLSX.writeFile(workbook, fileName)
 
       // 4. Uncheck the rows in the table & a success message will appear.
       table.resetRowSelection()
       toast.success(
-        `Exported successfully ${selectedCategories.length} ${
-          selectedCategories.length > 1 ? 'danh mục' : 'danh mục'
+        `Exported successfully ${selectedVenues.length} ${
+          selectedVenues.length > 1 ? 'danh mục' : 'danh mục'
         }!`
       )
     } catch (error) {
@@ -92,7 +92,7 @@ export function DataTableBulkActions<TData>({
 
   return (
     <>
-      <BulkActionsToolbar table={table} entityName='category'>
+      <BulkActionsToolbar table={table} entityName='venue'>
         <DropdownMenu>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -136,15 +136,15 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => handleBulkExport()}
               className='size-8'
-              aria-label='Export categories'
-              title='Export categories'
+              aria-label='Export venues'
+              title='Export venues'
             >
               <Download />
-              <span className='sr-only'>Export categories</span>
+              <span className='sr-only'>Export venues</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Export categories</p>
+            <p>Export venues</p>
           </TooltipContent>
         </Tooltip>
 
@@ -155,20 +155,20 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => setShowDeleteConfirm(true)}
               className='size-8'
-              aria-label='Delete selected categories'
-              title='Delete selected categories'
+              aria-label='Delete selected venues'
+              title='Delete selected venues'
             >
               <Trash2 />
-              <span className='sr-only'>Delete selected categories</span>
+              <span className='sr-only'>Delete selected venues</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Delete selected categories</p>
+            <p>Delete selected venues</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>
 
-      <CategoriesMultiDeleteDialog
+      <VenuesMultiDeleteDialog
         open={showDeleteConfirm}
         onOpenChange={setShowDeleteConfirm}
         table={table}

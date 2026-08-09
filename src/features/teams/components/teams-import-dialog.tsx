@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
-import { importSportCategories } from '@/api/categories-api'
+import { importTeamsApi } from '@/api/teams-api'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -24,7 +24,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
-//  MIME types valid to Excel
 const EXCEL_MIME_TYPES = [
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
   'application/vnd.ms-excel', // .xls
@@ -39,7 +38,6 @@ const formSchema = z.object({
     .refine((files) => {
       const file = files?.[0]
       if (!file) return false
-      // Check file .xlsx / .xls
       return (
         EXCEL_MIME_TYPES.includes(file.type) ||
         file.name.endsWith('.xlsx') ||
@@ -48,17 +46,17 @@ const formSchema = z.object({
     }, 'Please upload Excel format (.xlsx, .xls).'),
 })
 
-type CategoryImportDialogProps = {
+type TeamsImportDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSuccess?: () => void | Promise<void>
+  onSuccess?: () => void | Promise<void> 
 }
 
-export function CategoriesImportDialog({
+export function TeamsImportDialog({
   open,
   onOpenChange,
-  onSuccess
-}: CategoryImportDialogProps) {
+  onSuccess, 
+}: TeamsImportDialogProps) {
   const [loading, setLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -80,19 +78,22 @@ export function CategoriesImportDialog({
     setLoading(true)
 
     try {
-      const res = await importSportCategories(selectedFile)
+      const res = await importTeamsApi(selectedFile)
 
-      toast.success(res.message || 'Import Excel successfully!')
+      toast.success(res.message || 'Import teams successfully!')
 
       form.reset()
       onOpenChange(false)
+
       if (onSuccess) {
         await onSuccess()
       }
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('An error occurred while import:', error)
-      toast.error('Failed of Import. Please check the Excel file structure!')
+      console.error('An error occurred while importing teams:', error)
+      toast.error(
+        'Failed to import teams. Please check the Excel file structure!'
+      )
     } finally {
       setLoading(false)
     }
@@ -108,15 +109,15 @@ export function CategoriesImportDialog({
     >
       <DialogContent className='gap-2 sm:max-w-sm'>
         <DialogHeader className='text-start'>
-          <DialogTitle>Import Sport Categories</DialogTitle>
+          <DialogTitle>Import Teams</DialogTitle>
           <DialogDescription>
-            Import categories quickly from an Excel file (.xlsx, .xls).
+            Import teams quickly from an Excel file (.xlsx, .xls).
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form
-            id='category-import-form'
+            id='team-import-form'
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <FormField
@@ -124,7 +125,7 @@ export function CategoriesImportDialog({
               name='file'
               render={() => (
                 <FormItem className='my-2'>
-                  <FormLabel>File Excel</FormLabel>
+                  <FormLabel>Excel File</FormLabel>
                   <FormControl>
                     <Input
                       type='file'
@@ -147,7 +148,7 @@ export function CategoriesImportDialog({
               Close
             </Button>
           </DialogClose>
-          <Button type='submit' form='category-import-form' disabled={loading}>
+          <Button type='submit' form='team-import-form' disabled={loading}>
             {loading ? 'Importing...' : 'Import'}
           </Button>
         </DialogFooter>

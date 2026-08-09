@@ -4,13 +4,13 @@ import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
-import { deleteMultipleCategory } from '@/api/categories-api'
+import { deleteMultipleVenues } from '@/api/venues-api'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 
-type CategoryMultiDeleteDialogProps<TData> = {
+type VenueMultiDeleteDialogProps<TData> = {
   open: boolean
   onOpenChange: (open: boolean) => void
   table: Table<TData>
@@ -19,12 +19,12 @@ type CategoryMultiDeleteDialogProps<TData> = {
 
 const CONFIRM_WORD = 'DELETE'
 
-export function CategoriesMultiDeleteDialog<TData>({
+export function VenuesMultiDeleteDialog<TData>({
   open,
   onOpenChange,
   table,
   onSuccess
-}: CategoryMultiDeleteDialogProps<TData>) {
+}: VenueMultiDeleteDialogProps<TData>) {
   const [value, setValue] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -48,7 +48,7 @@ export function CategoriesMultiDeleteDialog<TData>({
     setLoading(true)
 
     try {
-      await deleteMultipleCategory(selectedIds)
+      await deleteMultipleVenues(selectedIds)
 
       toast.success(`Deleted successfully ${selectedIds.length} mục.`)
 
@@ -75,7 +75,7 @@ export function CategoriesMultiDeleteDialog<TData>({
         onOpenChange(v)
         if (!v) setValue('')
       }}
-      form='categories-multi-delete-form'
+      form='venues-multi-delete-form'
       disabled={value.trim() !== CONFIRM_WORD || loading}
       isLoading={loading}
       title={
@@ -85,12 +85,12 @@ export function CategoriesMultiDeleteDialog<TData>({
             size={18}
           />{' '}
           Delete {selectedRows.length}{' '}
-          {selectedRows.length > 1 ? 'categories' : 'category'}
+          {selectedRows.length > 1 ? 'venues' : 'venue'}
         </span>
       }
       desc={
         <form
-          id='categories-multi-delete-form'
+          id='venues-multi-delete-form'
           onSubmit={(e) => {
             e.preventDefault()
             handleDelete()
@@ -98,7 +98,7 @@ export function CategoriesMultiDeleteDialog<TData>({
           className='space-y-4'
         >
           <p className='mb-2'>
-            Are you sure you want to delete the selected categories? <br />
+            Are you sure you want to delete the selected venues? <br />
             This action cannot be undone.
           </p>
 

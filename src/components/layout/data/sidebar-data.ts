@@ -62,9 +62,29 @@ export const sidebarData: SidebarData = {
           url: '/tasks',
           icon: ListTodo,
         },
+                {
+          title: 'Levels',
+          url: '/levels',
+          icon: ListTodo,
+        },
         {
           title: 'Sport category',
           url: '/sport-categories',
+          icon: ListTodo,
+        },
+        {
+          title: 'Teams',
+          url: '/teams',
+          icon: ListTodo,
+        },
+        {
+          title: 'Venues',
+          url: '/venues',
+          icon: ListTodo,
+        },
+        {
+          title: 'Matches',
+          url: '/matches',
           icon: ListTodo,
         },
         {

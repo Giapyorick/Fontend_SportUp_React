@@ -1,24 +1,23 @@
 import { useEffect, useState, useCallback } from 'react'
-import { getCategory } from '@/api/categories-api'
+import { getLevels } from '@/api/levels-api'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { CategoriesDialogs } from './components/categories-dialogs'
-import { CategoriesPrimaryButtons } from './components/categories-primary-buttons'
-import { CategoryProvider } from './components/categories-provider'
-import { CategoriesTable } from './components/categories-table'
-import { type Category } from './data/schema' 
+import { LevelsDialogs } from './components/levels-dialogs'
+import { LevelsPrimaryButtons } from './components/levels-primary-buttons'
+import { LevelProvider } from './components/levels-provider'
+import { LevelsTable } from './components/levels-table'
+import { type Level } from './data/schema' 
 
-export function Categories() {
-  const [data, setData] = useState<Category[]>([])
+export function Levels() {
+  const [data, setData] = useState<Level[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshIndex, setRefreshIndex] = useState(0)
 
-  // Callback làm trigger refetch cho onSuccess
-  const handleSuccess = useCallback(() => {
+ const handleSuccess = useCallback(() => {
     setRefreshIndex((prev) => prev + 1)
   }, [])
 
@@ -27,9 +26,9 @@ export function Categories() {
 
     async function load() {
       try {
-        const result = await getCategory()
+        const result = await getLevels()
         if (!ignore) {
-          const formattedData: Category[] = result.map((item) => ({
+          const formattedData: Level[] = result.map((item) => ({
             ...item,
             description: item.description ?? '',
             status: item.status ?? 'active',
@@ -38,7 +37,7 @@ export function Categories() {
         }
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.error('An error occurred while getting all categories:', error)
+        console.error('An error occurred while getting all levels', error)
       } finally {
         if (!ignore) {
           setLoading(false)
@@ -51,10 +50,10 @@ export function Categories() {
     return () => {
       ignore = true
     }
-  }, [refreshIndex])
+  }, [refreshIndex]) 
 
   return (
-    <CategoryProvider>
+    <LevelProvider>
       <Header fixed>
         <Search className='me-auto' />
         <ThemeSwitch />
@@ -66,23 +65,23 @@ export function Categories() {
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>
-              Sport categories
+              Levels
             </h2>
             <p className='text-muted-foreground'>
-              Here&apos;s a list of sport categories!
+              Here&apos;s a list of all levels!
             </p>
           </div>
-          <CategoriesPrimaryButtons />
+          <LevelsPrimaryButtons />
         </div>
 
         {loading ? (
           <div>Loading data...</div>
         ) : (
-          <CategoriesTable data={data} onSuccess={handleSuccess} />
+          <LevelsTable data={data} onSuccess={handleSuccess} />
         )}
       </Main>
 
-      <CategoriesDialogs onSuccess={handleSuccess} />
-    </CategoryProvider>
+      <LevelsDialogs onSuccess={handleSuccess} />
+    </LevelProvider>
   )
 }

@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { deleteCategory } from '@/api/categories-api'
+import { deleteVenue } from '@/api/venues-api'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { CategoriesImportDialog } from './categories-import-dialog'
-import { CategoriesMutateDrawer } from './categories-mutate-drawer'
-import { useCategories } from './categories-provider'
+import { VenuesImportDialog } from './venues-import-dialog'
+import { VenuesMutateDrawer } from './venues-mutate-drawer'
+import { useVenues } from './venues-provider'
 
-type CategoriesDialogsProps = {
-  onSuccess?: () => void | Promise<void> 
+type VenuesDialogsProps = {
+  onSuccess?: () => void | Promise<void>
 }
 
-export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
-  const { open, setOpen, currentRow, setCurrentRow } = useCategories()
+export function VenuesDialogs({ onSuccess }: VenuesDialogsProps) {
+  const { open, setOpen, currentRow, setCurrentRow } = useVenues()
   const [isLoading, setIsLoading] = useState(false)
 
   // The function handles deleting data.
@@ -20,7 +20,7 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
 
     setIsLoading(true)
     try {
-      await deleteCategory(currentRow.id)
+      await deleteVenue(currentRow.id)
 
       toast.success(`Deleted successfully id : ${currentRow.id}`)
 
@@ -43,15 +43,15 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
 
   return (
     <>
-      <CategoriesMutateDrawer
-        key='category-create'
+      <VenuesMutateDrawer
+        key='venue-create'
         open={open === 'create'}
         onOpenChange={(isOpen) => setOpen(isOpen ? 'create' : null)}
         onSuccess={onSuccess}
       />
 
-      <CategoriesImportDialog
-        key='categories-import'
+      <VenuesImportDialog
+        key='venues-import'
         open={open === 'import'}
         onOpenChange={(isOpen) => setOpen(isOpen ? 'import' : null)}
         onSuccess={onSuccess}
@@ -61,8 +61,8 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
       {currentRow && (
         <>
           {/* Drawer Update */}
-          <CategoriesMutateDrawer
-            key={`category-update-${currentRow.id}`}
+          <VenuesMutateDrawer
+            key={`venue-update-${currentRow.id}`}
             open={open === 'update'}
             onOpenChange={(isOpen) => {
               if (!isOpen) {
@@ -78,7 +78,7 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
 
           {/* Delete confirmation Dialog */}
           <ConfirmDialog
-            key={`category-delete-${currentRow.id}`}
+            key={`venue-delete-${currentRow.id}`}
             destructive
             open={open === 'delete'}
             onOpenChange={(isOpen) => {

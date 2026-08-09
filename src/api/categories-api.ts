@@ -1,56 +1,59 @@
 import api from './axios'
 
-// get all sportcategory
+export type SportCategory = {
+  id: number
+  name: string
+  description?: string
+  status?: string
+}
 
-export const getCategory = async () => {
+export type CreateCategoryDto = {
+  name: string
+  description?: string
+  status?: string
+}
+
+// 1. Get all sport categories
+export const getCategory = async (): Promise<SportCategory[]> => {
   const response = await api.get('/SportCategories')
   return response.data
 }
-export type CreateCategoryDto = {
-  name: string
-  description: string
-  status: string
-}
 
-// create a new sportcategory
-
-export const createCategory = async (data: CreateCategoryDto) => {
+// 2. Create a new sport category
+export const createCategory = async (
+  data: CreateCategoryDto
+): Promise<SportCategory> => {
   const response = await api.post('/SportCategories', data)
   return response.data
 }
 
-// update an existing sportcategory
-
-export const updateCategory = async (id: number, data: CreateCategoryDto) => {
+// 3. Update an existing sport category
+export const updateCategory = async (
+  id: number,
+  data: CreateCategoryDto
+): Promise<SportCategory> => {
   const payload = {
     id,
     ...data,
   }
 
-  // eslint-disable-next-line no-console
-  console.log(payload)
-
   const response = await api.put(`/SportCategories/${id}`, payload)
-
   return response.data
 }
 
-// delete a sportcategory
-
+// 4. Delete a sport category
 export const deleteCategory = async (id: number) => {
   const response = await api.delete(`/SportCategories/${id}`)
   return response.data
 }
 
-// delete multiple sportcategory
-
+// 5. Delete multiple sport categories
 export const deleteMultipleCategory = async (ids: number[]) => {
   const response = await api.post('/SportCategories/multi-delete', ids)
   return response.data
 }
 
-// import a file sportcategory
-
+// 6. Import sport categories from Excel file
 export const importSportCategories = async (file: File) => {
   const formData = new FormData()
   formData.append('file', file)

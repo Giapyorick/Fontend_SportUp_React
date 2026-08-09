@@ -18,81 +18,80 @@ import {
 } from '@/components/ui/tooltip'
 import { DataTableBulkActions as BulkActionsToolbar } from '@/components/data-table'
 import { statuses } from '../data/data'
-import { type Category } from '../data/schema'
-import { CategoriesMultiDeleteDialog } from './categories-multi-delete-dialog'
+import { type Team } from '../data/schema'
+import { TeamsMultiDeleteDialog } from './teams-multi-delete-dialog'
 
 type DataTableBulkActionsProps<TData> = {
   table: Table<TData>
-  onSuccess?: () => void | Promise<void>
+  onSuccess?: () => void | Promise<void> 
 }
 
 export function DataTableBulkActions<TData>({
   table,
-  onSuccess,
+  onSuccess, 
 }: DataTableBulkActionsProps<TData>) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const selectedRows = table.getFilteredSelectedRowModel().rows
 
   const handleBulkStatusChange = (status: string) => {
-    const selectedCategories = selectedRows.map(
-      (row) => row.original as Category
-    )
+    const selectedTeams = selectedRows.map((row) => row.original as Team)
     toast.promise(sleep(2000), {
       loading: 'Updating status...',
       success: () => {
         table.resetRowSelection()
-        return `Status updated to "${status}" for ${selectedCategories.length} categor${selectedCategories.length > 1 ? 'ies' : 'y'}.`
+        onSuccess?.() 
+        return `Status updated to "${status}" for ${selectedTeams.length} team${selectedTeams.length > 1 ? 's' : ''}.`
       },
-      error: 'Error',
+      error: 'Failed to update status',
     })
     table.resetRowSelection()
   }
 
   const handleBulkExport = () => {
-    // 1. Get a list of selected rows
-    const selectedCategories = selectedRows.map(
-      (row) => row.original as Category
-    )
+    // 1. Get a list has selected
+    const selectedTeams = selectedRows.map((row) => row.original as Team)
 
-    if (selectedCategories.length === 0) {
-      toast.error('please select aleast 1 row to export!')
+    if (selectedTeams.length === 0) {
+      toast.error('Please select at least 1 team to export!')
       return
     }
 
     try {
-      // 2. Convert JSON data from selected rows to a sheet.
-      const exportData = selectedCategories.map((item) => ({
+      // 2. Map data of football team to sheet Excel
+      const exportData = selectedTeams.map((item) => ({
         ID: item.id,
-        'Tên danh mục': item.name,
-        'Mô tả': item.description,
-        'Trạng thái': item.status ?? 'Active',
+        'Name': item.name,
+        'Description': item.description,
+        'Logo URL': item.logoUrl,
+        'Status': item.status ?? 'Active',
+        'Ngày tạo': item.createdAt
+          ? new Date(item.createdAt).toLocaleDateString('vi-VN')
+          : '',
       }))
 
       const worksheet = XLSX.utils.json_to_sheet(exportData)
       const workbook = XLSX.utils.book_new()
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'SportCategories')
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Teams')
 
-      // 3. download file .xlsx
-      const fileName = `SportCategories_Export_${new Date().getTime()}.xlsx`
+      // 3. Download file .xlsx
+      const fileName = `Teams_Export_${new Date().getTime()}.xlsx`
       XLSX.writeFile(workbook, fileName)
 
-      // 4. Uncheck the rows in the table & a success message will appear.
+      // 4.  Uncheck the rows in the table & a success message will appear.
       table.resetRowSelection()
       toast.success(
-        `Exported successfully ${selectedCategories.length} ${
-          selectedCategories.length > 1 ? 'danh mục' : 'danh mục'
-        }!`
+        `Exported successfully ${selectedTeams.length} team${selectedTeams.length > 1 ? 's' : ''}!`
       )
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('An error occurred while export:', error)
-      toast.error('Failed to export, please try again !')
+      toast.error('Failed to export, please try again!')
     }
   }
 
   return (
     <>
-      <BulkActionsToolbar table={table} entityName='category'>
+      <BulkActionsToolbar table={table} entityName='team'>
         <DropdownMenu>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -136,15 +135,15 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => handleBulkExport()}
               className='size-8'
-              aria-label='Export categories'
-              title='Export categories'
+              aria-label='Export teams'
+              title='Export teams'
             >
               <Download />
-              <span className='sr-only'>Export categories</span>
+              <span className='sr-only'>Export teams</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Export categories</p>
+            <p>Export teams</p>
           </TooltipContent>
         </Tooltip>
 
@@ -155,20 +154,20 @@ export function DataTableBulkActions<TData>({
               size='icon'
               onClick={() => setShowDeleteConfirm(true)}
               className='size-8'
-              aria-label='Delete selected categories'
-              title='Delete selected categories'
+              aria-label='Delete selected teams'
+              title='Delete selected teams'
             >
               <Trash2 />
-              <span className='sr-only'>Delete selected categories</span>
+              <span className='sr-only'>Delete selected teams</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Delete selected categories</p>
+            <p>Delete selected teams</p>
           </TooltipContent>
         </Tooltip>
       </BulkActionsToolbar>
 
-      <CategoriesMultiDeleteDialog
+      <TeamsMultiDeleteDialog
         open={showDeleteConfirm}
         onOpenChange={setShowDeleteConfirm}
         table={table}

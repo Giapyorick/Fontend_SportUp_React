@@ -1,28 +1,26 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { deleteCategory } from '@/api/categories-api'
+import { deleteTeam } from '@/api/teams-api'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { CategoriesImportDialog } from './categories-import-dialog'
-import { CategoriesMutateDrawer } from './categories-mutate-drawer'
-import { useCategories } from './categories-provider'
+import { TeamsMutateDrawer } from './teams-mutate-drawer'
+import { TeamsImportDialog } from './teams-import-dialog' // 1. Import TeamsImportDialog
+import { useTeams } from './teams-provider'
 
-type CategoriesDialogsProps = {
-  onSuccess?: () => void | Promise<void> 
+type TeamsDialogsProps = {
+  onSuccess?: () => void | Promise<void>
 }
 
-export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
-  const { open, setOpen, currentRow, setCurrentRow } = useCategories()
+export function TeamsDialogs({ onSuccess }: TeamsDialogsProps) {
+  const { open, setOpen, currentRow, setCurrentRow } = useTeams()
   const [isLoading, setIsLoading] = useState(false)
 
-  // The function handles deleting data.
   const handleDelete = async () => {
     if (!currentRow?.id) return
 
     setIsLoading(true)
     try {
-      await deleteCategory(currentRow.id)
-
-      toast.success(`Deleted successfully id : ${currentRow.id}`)
+      await deleteTeam(currentRow.id)
+      toast.success(`Deleted team "${currentRow.name}" successfully!`)
 
       setOpen(null)
       setTimeout(() => {
@@ -33,9 +31,9 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
         await onSuccess()
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('An error occurred while deleting:', error)
-      toast.error('Failed to delete, please try again !')
+       // eslint-disable-next-line no-console
+      console.error('An error occurred while deleting team:', error)
+      toast.error('Failed to delete team, please try again!')
     } finally {
       setIsLoading(false)
     }
@@ -43,26 +41,25 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
 
   return (
     <>
-      <CategoriesMutateDrawer
-        key='category-create'
+      {/* Drawer Create */}
+      <TeamsMutateDrawer
+        key='team-create'
         open={open === 'create'}
         onOpenChange={(isOpen) => setOpen(isOpen ? 'create' : null)}
         onSuccess={onSuccess}
       />
 
-      <CategoriesImportDialog
-        key='categories-import'
+      <TeamsImportDialog
+        key='team-import'
         open={open === 'import'}
         onOpenChange={(isOpen) => setOpen(isOpen ? 'import' : null)}
         onSuccess={onSuccess}
       />
 
-      {/* Need new currentRow to render Update and Delete */}
       {currentRow && (
         <>
-          {/* Drawer Update */}
-          <CategoriesMutateDrawer
-            key={`category-update-${currentRow.id}`}
+          <TeamsMutateDrawer
+            key={`team-update-${currentRow.id}`}
             open={open === 'update'}
             onOpenChange={(isOpen) => {
               if (!isOpen) {
@@ -76,9 +73,8 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
             onSuccess={onSuccess}
           />
 
-          {/* Delete confirmation Dialog */}
           <ConfirmDialog
-            key={`category-delete-${currentRow.id}`}
+            key={`team-delete-${currentRow.id}`}
             destructive
             open={open === 'delete'}
             onOpenChange={(isOpen) => {
@@ -90,18 +86,19 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
               }
             }}
             handleConfirm={handleDelete}
-            isLoading={isLoading}
+            disabled={isLoading}
             className='max-w-md'
-            title={`Delete this item: ${currentRow.name || currentRow.id} ?`}
+            title={`Delete team: ${currentRow.name}?`}
             desc={
               <>
                 You are about to delete{' '}
-                <strong>{currentRow.name || `ID ${currentRow.id}`}</strong>.{' '}
+                <strong className='text-foreground'>{currentRow.name}</strong>{' '}
+                (ID: {currentRow.id}).
                 <br />
                 This action cannot be undone.
               </>
             }
-            confirmText='Delete'
+            confirmText={isLoading ? 'Deleting...' : 'Delete'}
           />
         </>
       )}

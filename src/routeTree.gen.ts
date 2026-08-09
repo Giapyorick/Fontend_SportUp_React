@@ -29,6 +29,8 @@ import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authentica
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
+import { Route as AuthenticatedLevelsIndexRouteImport } from './routes/_authenticated/levels/index'
+import { Route as AuthenticatedMatchesIndexRouteImport } from './routes/_authenticated/matches/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
@@ -36,7 +38,9 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSportCategoriesIndexRouteImport } from './routes/_authenticated/sport-categories/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
+import { Route as AuthenticatedTeamsIndexRouteImport } from './routes/_authenticated/teams/index'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
+import { Route as AuthenticatedVenuesIndexRouteImport } from './routes/_authenticated/venues/index'
 import { Route as ClerkauthSignInRouteImport } from './routes/clerk/(auth)/sign-in'
 import { Route as ClerkauthSignUpRouteImport } from './routes/clerk/(auth)/sign-up'
 import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/clerk/_authenticated/user-management'
@@ -141,6 +145,18 @@ const AuthenticatedHelpCenterIndexRoute =
     path: '/help-center/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedLevelsIndexRoute =
+  AuthenticatedLevelsIndexRouteImport.update({
+    id: '/levels/',
+    path: '/levels/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMatchesIndexRoute =
+  AuthenticatedMatchesIndexRouteImport.update({
+    id: '/matches/',
+    path: '/matches/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
@@ -182,11 +198,22 @@ const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
   path: '/tasks/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTeamsIndexRoute = AuthenticatedTeamsIndexRouteImport.update({
+  id: '/teams/',
+  path: '/teams/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedVenuesIndexRoute =
+  AuthenticatedVenuesIndexRouteImport.update({
+    id: '/venues/',
+    path: '/venues/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ClerkauthSignInRoute = ClerkauthSignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
@@ -229,10 +256,14 @@ export interface FileRoutesByFullPath {
   '/apps/': typeof AuthenticatedAppsIndexRoute
   '/chats/': typeof AuthenticatedChatsIndexRoute
   '/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/levels/': typeof AuthenticatedLevelsIndexRoute
+  '/matches/': typeof AuthenticatedMatchesIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/sport-categories/': typeof AuthenticatedSportCategoriesIndexRoute
   '/tasks/': typeof AuthenticatedTasksIndexRoute
+  '/teams/': typeof AuthenticatedTeamsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
+  '/venues/': typeof AuthenticatedVenuesIndexRoute
 }
 export interface FileRoutesByTo {
   '/clerk': typeof ClerkauthRouteRouteWithChildren
@@ -258,10 +289,14 @@ export interface FileRoutesByTo {
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/levels': typeof AuthenticatedLevelsIndexRoute
+  '/matches': typeof AuthenticatedMatchesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/sport-categories': typeof AuthenticatedSportCategoriesIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/teams': typeof AuthenticatedTeamsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/venues': typeof AuthenticatedVenuesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -292,10 +327,14 @@ export interface FileRoutesById {
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/levels/': typeof AuthenticatedLevelsIndexRoute
+  '/_authenticated/matches/': typeof AuthenticatedMatchesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/sport-categories/': typeof AuthenticatedSportCategoriesIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
+  '/_authenticated/teams/': typeof AuthenticatedTeamsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/venues/': typeof AuthenticatedVenuesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -324,10 +363,14 @@ export interface FileRouteTypes {
     | '/apps/'
     | '/chats/'
     | '/help-center/'
+    | '/levels/'
+    | '/matches/'
     | '/settings/'
     | '/sport-categories/'
     | '/tasks/'
+    | '/teams/'
     | '/users/'
+    | '/venues/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/clerk'
@@ -353,10 +396,14 @@ export interface FileRouteTypes {
     | '/apps'
     | '/chats'
     | '/help-center'
+    | '/levels'
+    | '/matches'
     | '/settings'
     | '/sport-categories'
     | '/tasks'
+    | '/teams'
     | '/users'
+    | '/venues'
   id:
     | '__root__'
     | '/_authenticated'
@@ -386,10 +433,14 @@ export interface FileRouteTypes {
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/levels/'
+    | '/_authenticated/matches/'
     | '/_authenticated/settings/'
     | '/_authenticated/sport-categories/'
     | '/_authenticated/tasks/'
+    | '/_authenticated/teams/'
     | '/_authenticated/users/'
+    | '/_authenticated/venues/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -549,6 +600,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/levels/': {
+      id: '/_authenticated/levels/'
+      path: '/levels'
+      fullPath: '/levels/'
+      preLoaderRoute: typeof AuthenticatedLevelsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/matches/': {
+      id: '/_authenticated/matches/'
+      path: '/matches'
+      fullPath: '/matches/'
+      preLoaderRoute: typeof AuthenticatedMatchesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -598,11 +663,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTasksIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/teams/': {
+      id: '/_authenticated/teams/'
+      path: '/teams'
+      fullPath: '/teams/'
+      preLoaderRoute: typeof AuthenticatedTeamsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/users/': {
       id: '/_authenticated/users/'
       path: '/users'
       fullPath: '/users/'
       preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/venues/': {
+      id: '/_authenticated/venues/'
+      path: '/venues'
+      fullPath: '/venues/'
+      preLoaderRoute: typeof AuthenticatedVenuesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/clerk/(auth)/sign-in': {
@@ -659,9 +738,13 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedLevelsIndexRoute: typeof AuthenticatedLevelsIndexRoute
+  AuthenticatedMatchesIndexRoute: typeof AuthenticatedMatchesIndexRoute
   AuthenticatedSportCategoriesIndexRoute: typeof AuthenticatedSportCategoriesIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
+  AuthenticatedTeamsIndexRoute: typeof AuthenticatedTeamsIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedVenuesIndexRoute: typeof AuthenticatedVenuesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -671,10 +754,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedLevelsIndexRoute: AuthenticatedLevelsIndexRoute,
+  AuthenticatedMatchesIndexRoute: AuthenticatedMatchesIndexRoute,
   AuthenticatedSportCategoriesIndexRoute:
     AuthenticatedSportCategoriesIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
+  AuthenticatedTeamsIndexRoute: AuthenticatedTeamsIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedVenuesIndexRoute: AuthenticatedVenuesIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

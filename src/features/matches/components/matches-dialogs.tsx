@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { deleteCategory } from '@/api/categories-api'
+import { deleteMatch } from '@/api/matches-api'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { CategoriesImportDialog } from './categories-import-dialog'
-import { CategoriesMutateDrawer } from './categories-mutate-drawer'
-import { useCategories } from './categories-provider'
+//import { MatchesImportDialog } from './matches-import-dialog'
+import { MatchesMutateDrawer } from './matches-mutate-drawer'
+import { useMatches } from './matches-provider'
 
-type CategoriesDialogsProps = {
+type MatchesDialogsProps = {
   onSuccess?: () => void | Promise<void> 
 }
 
-export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
-  const { open, setOpen, currentRow, setCurrentRow } = useCategories()
+export function MatchesDialogs({ onSuccess }: MatchesDialogsProps) {
+  const { open, setOpen, currentRow, setCurrentRow } = useMatches()
   const [isLoading, setIsLoading] = useState(false)
 
   // The function handles deleting data.
@@ -20,7 +20,7 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
 
     setIsLoading(true)
     try {
-      await deleteCategory(currentRow.id)
+      await deleteMatch(currentRow.id)
 
       toast.success(`Deleted successfully id : ${currentRow.id}`)
 
@@ -43,26 +43,26 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
 
   return (
     <>
-      <CategoriesMutateDrawer
-        key='category-create'
+      <MatchesMutateDrawer
+        key='match-create'
         open={open === 'create'}
         onOpenChange={(isOpen) => setOpen(isOpen ? 'create' : null)}
         onSuccess={onSuccess}
       />
 
-      <CategoriesImportDialog
-        key='categories-import'
+      {/* <MatchesImportDialog
+        key='matches-import'
         open={open === 'import'}
         onOpenChange={(isOpen) => setOpen(isOpen ? 'import' : null)}
         onSuccess={onSuccess}
-      />
+      /> */}
 
       {/* Need new currentRow to render Update and Delete */}
       {currentRow && (
         <>
           {/* Drawer Update */}
-          <CategoriesMutateDrawer
-            key={`category-update-${currentRow.id}`}
+          <MatchesMutateDrawer
+            key={`match-update-${currentRow.id}`}
             open={open === 'update'}
             onOpenChange={(isOpen) => {
               if (!isOpen) {
@@ -78,7 +78,7 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
 
           {/* Delete confirmation Dialog */}
           <ConfirmDialog
-            key={`category-delete-${currentRow.id}`}
+            key={`match-delete-${currentRow.id}`}
             destructive
             open={open === 'delete'}
             onOpenChange={(isOpen) => {
@@ -92,11 +92,11 @@ export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {
             handleConfirm={handleDelete}
             isLoading={isLoading}
             className='max-w-md'
-            title={`Delete this item: ${currentRow.name || currentRow.id} ?`}
+            title={`Delete this item: ${currentRow.title || currentRow.id} ?`}
             desc={
               <>
                 You are about to delete{' '}
-                <strong>{currentRow.name || `ID ${currentRow.id}`}</strong>.{' '}
+                <strong>{currentRow.title || `ID ${currentRow.id}`}</strong>.{' '}
                 <br />
                 This action cannot be undone.
               </>

@@ -24,18 +24,18 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { statuses } from '../data/data'
-import { type Category } from '../data/schema'
-import { categoriesColumns as columns } from './categories-columns'
+import { type Match } from '../data/schema'
+import { matchesColumns as columns } from './matches-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 
-const route = getRouteApi('/_authenticated/sport-categories/')
+const route = getRouteApi('/_authenticated/matches/')
 
 type DataTableProps = {
-  data: Category[]
+  data: Match[]
   onSuccess?: () => void | Promise<void>
 }
 
-export function CategoriesTable({ data, onSuccess }: DataTableProps) {
+export function MatchesTable({ data, onSuccess }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
