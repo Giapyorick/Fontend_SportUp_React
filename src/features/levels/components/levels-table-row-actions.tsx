@@ -9,7 +9,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { levelsSchema as levelsSchema } from '../data/schema'
+import { levelsSchema } from '../data/schema'
 import { useLevels } from './levels-provider'
 
 type DataTableRowActionsProps<TData> = {

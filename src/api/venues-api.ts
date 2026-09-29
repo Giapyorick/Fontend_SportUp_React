@@ -28,9 +28,7 @@ export const getVenueById = async (id: number): Promise<Venue> => {
 }
 
 // 3. Create a new venue
-export const createVenue = async (
-  data: CreateVenueDto
-): Promise<Venue> => {
+export const createVenue = async (data: CreateVenueDto): Promise<Venue> => {
   const response = await api.post('/Venues', data)
   return response.data
 }

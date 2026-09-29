@@ -34,9 +34,7 @@ export function DataTableBulkActions<TData>({
   const selectedRows = table.getFilteredSelectedRowModel().rows
 
   const handleBulkStatusChange = (status: string) => {
-    const selectedVenues = selectedRows.map(
-      (row) => row.original as Venue
-    )
+    const selectedVenues = selectedRows.map((row) => row.original as Venue)
     toast.promise(sleep(2000), {
       loading: 'Updating status...',
       success: () => {
@@ -50,9 +48,7 @@ export function DataTableBulkActions<TData>({
 
   const handleBulkExport = () => {
     // 1. Get a list of selected rows
-    const selectedVenues = selectedRows.map(
-      (row) => row.original as Venue
-    )
+    const selectedVenues = selectedRows.map((row) => row.original as Venue)
 
     if (selectedVenues.length === 0) {
       toast.error('please select aleast 1 row to export!')
@@ -63,9 +59,9 @@ export function DataTableBulkActions<TData>({
       // 2. Convert JSON data from selected rows to a sheet.
       const exportData = selectedVenues.map((item) => ({
         ID: item.id,
-        'Name': item.name,
-        'Address': item.address,
-        'Status': item.status ?? 'Active',
+        Name: item.name,
+        Address: item.address,
+        Status: item.status ?? 'Active',
       }))
 
       const worksheet = XLSX.utils.json_to_sheet(exportData)

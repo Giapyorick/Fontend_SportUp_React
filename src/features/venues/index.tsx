@@ -32,8 +32,8 @@ export function Venues() {
           const formattedData: Venue[] = result.map((item) => ({
             ...item,
             address: item.address ?? '',
-            mapUrl: item.mapUrl ?? '', 
-            status: item.status ?? 'Active', 
+            mapUrl: item.mapUrl ?? '',
+            status: item.status ?? 'Active',
           }))
           setData(formattedData)
         }

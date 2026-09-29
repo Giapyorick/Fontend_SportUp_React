@@ -23,12 +23,12 @@ import { TeamsMultiDeleteDialog } from './teams-multi-delete-dialog'
 
 type DataTableBulkActionsProps<TData> = {
   table: Table<TData>
-  onSuccess?: () => void | Promise<void> 
+  onSuccess?: () => void | Promise<void>
 }
 
 export function DataTableBulkActions<TData>({
   table,
-  onSuccess, 
+  onSuccess,
 }: DataTableBulkActionsProps<TData>) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const selectedRows = table.getFilteredSelectedRowModel().rows
@@ -39,7 +39,7 @@ export function DataTableBulkActions<TData>({
       loading: 'Updating status...',
       success: () => {
         table.resetRowSelection()
-        onSuccess?.() 
+        onSuccess?.()
         return `Status updated to "${status}" for ${selectedTeams.length} team${selectedTeams.length > 1 ? 's' : ''}.`
       },
       error: 'Failed to update status',
@@ -60,10 +60,10 @@ export function DataTableBulkActions<TData>({
       // 2. Map data of football team to sheet Excel
       const exportData = selectedTeams.map((item) => ({
         ID: item.id,
-        'Name': item.name,
-        'Description': item.description,
+        Name: item.name,
+        Description: item.description,
         'Logo URL': item.logoUrl,
-        'Status': item.status ?? 'Active',
+        Status: item.status ?? 'Active',
         'Ngày tạo': item.createdAt
           ? new Date(item.createdAt).toLocaleDateString('vi-VN')
           : '',

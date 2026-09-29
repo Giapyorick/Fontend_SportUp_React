@@ -7,7 +7,7 @@ import { CategoriesMutateDrawer } from './categories-mutate-drawer'
 import { useCategories } from './categories-provider'
 
 type CategoriesDialogsProps = {
-  onSuccess?: () => void | Promise<void> 
+  onSuccess?: () => void | Promise<void>
 }
 
 export function CategoriesDialogs({ onSuccess }: CategoriesDialogsProps) {

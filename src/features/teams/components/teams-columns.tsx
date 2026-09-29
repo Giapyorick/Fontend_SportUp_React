@@ -1,9 +1,9 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
+import { ImagePreviewModal } from '@/features/teams/components/image-preview-modal'
 import { statuses } from '../data/data'
 import { type Team } from '../data/schema'
-import { ImagePreviewModal } from '@/features/teams/components/image-preview-modal'
 import { DataTableRowActions } from './teams-table-row-actions'
 
 export const teamsColumns: ColumnDef<Team>[] = [

@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { deleteTeam } from '@/api/teams-api'
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { TeamsImportDialog } from './teams-import-dialog'
 import { TeamsMutateDrawer } from './teams-mutate-drawer'
-import { TeamsImportDialog } from './teams-import-dialog' // 1. Import TeamsImportDialog
+// 1. Import TeamsImportDialog
 import { useTeams } from './teams-provider'
 
 type TeamsDialogsProps = {
@@ -31,7 +32,7 @@ export function TeamsDialogs({ onSuccess }: TeamsDialogsProps) {
         await onSuccess()
       }
     } catch (error) {
-       // eslint-disable-next-line no-console
+      // eslint-disable-next-line no-console
       console.error('An error occurred while deleting team:', error)
       toast.error('Failed to delete team, please try again!')
     } finally {

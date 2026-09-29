@@ -25,8 +25,8 @@ import {
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { statuses } from '../data/data'
 import { type Match } from '../data/schema'
-import { matchesColumns as columns } from './matches-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
+import { matchesColumns as columns } from './matches-columns'
 
 const route = getRouteApi('/_authenticated/matches/')
 

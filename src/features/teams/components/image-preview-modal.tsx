@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 
 type ImagePreviewModalProps = {
   src?: string | null
@@ -8,7 +8,11 @@ type ImagePreviewModalProps = {
   className?: string
 }
 
-export function ImagePreviewModal({ src, alt = 'Preview', className }: ImagePreviewModalProps) {
+export function ImagePreviewModal({
+  src,
+  alt = 'Preview',
+  className,
+}: ImagePreviewModalProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   if (!src) return null
@@ -20,7 +24,10 @@ export function ImagePreviewModal({ src, alt = 'Preview', className }: ImagePrev
         src={src}
         alt={alt}
         onClick={() => setIsOpen(true)}
-        className={cn('cursor-pointer object-cover transition-transform hover:scale-105', className)}
+        className={cn(
+          'cursor-pointer object-cover transition-transform hover:scale-105',
+          className
+        )}
       />
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>

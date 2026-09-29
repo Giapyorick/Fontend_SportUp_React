@@ -25,8 +25,8 @@ import {
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { statuses } from '../data/data'
 import { type Venue } from '../data/schema'
-import { venuesColumns as columns } from './venues-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
+import { venuesColumns as columns } from './venues-columns'
 
 const route = getRouteApi('/_authenticated/venues/')
 

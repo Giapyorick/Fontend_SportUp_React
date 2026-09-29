@@ -57,7 +57,7 @@ type CategoryImportDialogProps = {
 export function CategoriesImportDialog({
   open,
   onOpenChange,
-  onSuccess
+  onSuccess,
 }: CategoryImportDialogProps) {
   const [loading, setLoading] = useState(false)
 

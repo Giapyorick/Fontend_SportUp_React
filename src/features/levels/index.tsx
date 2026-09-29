@@ -10,14 +10,14 @@ import { LevelsDialogs } from './components/levels-dialogs'
 import { LevelsPrimaryButtons } from './components/levels-primary-buttons'
 import { LevelProvider } from './components/levels-provider'
 import { LevelsTable } from './components/levels-table'
-import { type Level } from './data/schema' 
+import { type Level } from './data/schema'
 
 export function Levels() {
   const [data, setData] = useState<Level[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshIndex, setRefreshIndex] = useState(0)
 
- const handleSuccess = useCallback(() => {
+  const handleSuccess = useCallback(() => {
     setRefreshIndex((prev) => prev + 1)
   }, [])
 
@@ -50,7 +50,7 @@ export function Levels() {
     return () => {
       ignore = true
     }
-  }, [refreshIndex]) 
+  }, [refreshIndex])
 
   return (
     <LevelProvider>
@@ -64,9 +64,7 @@ export function Levels() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>
-              Levels
-            </h2>
+            <h2 className='text-2xl font-bold tracking-tight'>Levels</h2>
             <p className='text-muted-foreground'>
               Here&apos;s a list of all levels!
             </p>

@@ -23,7 +23,7 @@ export function MatchesMultiDeleteDialog<TData>({
   open,
   onOpenChange,
   table,
-  onSuccess
+  onSuccess,
 }: MatchMultiDeleteDialogProps<TData>) {
   const [value, setValue] = useState('')
   const [loading, setLoading] = useState(false)

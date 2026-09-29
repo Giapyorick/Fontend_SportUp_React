@@ -25,8 +25,8 @@ import {
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { statuses } from '../data/data'
 import { type Team } from '../data/schema'
-import { teamsColumns as columns } from './teams-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
+import { teamsColumns as columns } from './teams-columns'
 
 const route = getRouteApi('/_authenticated/teams/')
 
@@ -101,7 +101,9 @@ export function TeamsTable({ data, onSuccess }: DataTableProps) {
     globalFilterFn: (row, _columnId, filterValue) => {
       const id = String(row.getValue('id')).toLowerCase()
       const name = String(row.getValue('name')).toLowerCase()
-      const description = String(row.getValue('description') ?? '').toLowerCase()
+      const description = String(
+        row.getValue('description') ?? ''
+      ).toLowerCase()
 
       const search = String(filterValue).toLowerCase()
 

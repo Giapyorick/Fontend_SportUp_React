@@ -31,7 +31,7 @@ type LevelsMutateDrawerProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   currentRow?: Level
-  onSuccess?: () => void | Promise<void> 
+  onSuccess?: () => void | Promise<void>
 }
 
 const formSchema = z.object({
@@ -46,7 +46,7 @@ export function LevelsMutateDrawer({
   open,
   onOpenChange,
   currentRow,
-  onSuccess, 
+  onSuccess,
 }: LevelsMutateDrawerProps) {
   const isUpdate = !!currentRow
   const [loading, setLoading] = useState(false)

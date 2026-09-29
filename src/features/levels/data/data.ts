@@ -1,7 +1,4 @@
-import {
-  Circle,
-  HelpCircle,
-} from 'lucide-react'
+import { Circle, HelpCircle } from 'lucide-react'
 
 export const statuses = [
   {

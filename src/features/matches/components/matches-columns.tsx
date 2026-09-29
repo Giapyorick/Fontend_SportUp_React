@@ -44,7 +44,10 @@ export const matchesColumns: ColumnDef<Match>[] = [
       <DataTableColumnHeader column={column} title='Title' />
     ),
     cell: ({ row }) => (
-      <div className='font-medium max-w-[200px] truncate' title={row.getValue('title')}>
+      <div
+        className='max-w-[200px] truncate font-medium'
+        title={row.getValue('title')}
+      >
         {row.getValue('title')}
       </div>
     ),
@@ -92,7 +95,13 @@ export const matchesColumns: ColumnDef<Match>[] = [
       const total = row.original.totalSlots
       return (
         <div className='font-mono text-xs'>
-          <span className={available > 0 ? 'text-green-600 font-semibold' : 'text-red-500 font-semibold'}>
+          <span
+            className={
+              available > 0
+                ? 'font-semibold text-green-600'
+                : 'font-semibold text-red-500'
+            }
+          >
             {available}
           </span>
           /{total}

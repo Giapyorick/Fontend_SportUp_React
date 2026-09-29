@@ -7,7 +7,7 @@ import { MatchesMutateDrawer } from './matches-mutate-drawer'
 import { useMatches } from './matches-provider'
 
 type MatchesDialogsProps = {
-  onSuccess?: () => void | Promise<void> 
+  onSuccess?: () => void | Promise<void>
 }
 
 export function MatchesDialogs({ onSuccess }: MatchesDialogsProps) {

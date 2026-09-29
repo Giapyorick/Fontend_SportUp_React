@@ -47,7 +47,7 @@ export function CategoriesMutateDrawer({
   open,
   onOpenChange,
   currentRow,
-  onSuccess
+  onSuccess,
 }: CategoriesMutateDrawer) {
   const isUpdate = !!currentRow
   const [loading, setLoading] = useState(false)

@@ -25,8 +25,8 @@ import {
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { statuses } from '../data/data'
 import { type Level } from '../data/schema'
-import { levelsColumns as columns } from './levels-columns'
 import { DataTableBulkActions } from './data-table-bulk-actions'
+import { levelsColumns as columns } from './levels-columns'
 
 const route = getRouteApi('/_authenticated/levels/')
 

@@ -23,7 +23,7 @@ export function VenuesMultiDeleteDialog<TData>({
   open,
   onOpenChange,
   table,
-  onSuccess
+  onSuccess,
 }: VenueMultiDeleteDialogProps<TData>) {
   const [value, setValue] = useState('')
   const [loading, setLoading] = useState(false)

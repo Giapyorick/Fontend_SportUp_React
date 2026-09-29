@@ -23,20 +23,18 @@ import { LevelsMultiDeleteDialog } from './levels-multi-delete-dialog'
 
 type DataTableBulkActionsProps<TData> = {
   table: Table<TData>
-  onSuccess?: () => void | Promise<void> 
+  onSuccess?: () => void | Promise<void>
 }
 
 export function DataTableBulkActions<TData>({
   table,
-  onSuccess, 
+  onSuccess,
 }: DataTableBulkActionsProps<TData>) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const selectedRows = table.getFilteredSelectedRowModel().rows
 
   const handleBulkStatusChange = (status: string) => {
-    const selectedLevels = selectedRows.map(
-      (row) => row.original as Level
-    )
+    const selectedLevels = selectedRows.map((row) => row.original as Level)
     toast.promise(sleep(2000), {
       loading: 'Updating status...',
       success: () => {
@@ -50,9 +48,7 @@ export function DataTableBulkActions<TData>({
 
   const handleBulkExport = () => {
     // 1. Get a list of selected rows
-    const selectedLevels = selectedRows.map(
-      (row) => row.original as Level
-    )
+    const selectedLevels = selectedRows.map((row) => row.original as Level)
 
     if (selectedLevels.length === 0) {
       toast.error('please select aleast 1 row to export!')
@@ -63,9 +59,9 @@ export function DataTableBulkActions<TData>({
       // 2. Convert data from selected rows to a sheet.
       const exportData = selectedLevels.map((item) => ({
         ID: item.id,
-        'Level': item.name,
-        'Description': item.description,
-        'Status': item.status ?? 'Active',
+        Level: item.name,
+        Description: item.description,
+        Status: item.status ?? 'Active',
       }))
 
       const worksheet = XLSX.utils.json_to_sheet(exportData)

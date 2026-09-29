@@ -8,8 +8,8 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { TeamsDialogs } from './components/teams-dialogs'
 import { TeamsPrimaryButtons } from './components/teams-primary-buttons'
-import { TeamsTable } from './components/teams-table'
 import { TeamsProvider, useTeams } from './components/teams-provider'
+import { TeamsTable } from './components/teams-table'
 
 function TeamsContent() {
   const { teams, setTeams } = useTeams()
@@ -20,7 +20,7 @@ function TeamsContent() {
       const result = await getTeams()
       setTeams(result)
     } catch (error) {
-       // eslint-disable-next-line no-console
+      // eslint-disable-next-line no-console
       console.error('An error occurred while fetching teams:', error)
     } finally {
       setLoading(false)

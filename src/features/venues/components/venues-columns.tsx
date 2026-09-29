@@ -57,7 +57,7 @@ export const venuesColumns: ColumnDef<Venue>[] = [
       <div className='max-w-md truncate'>{row.getValue('address')}</div>
     ),
   },
-    {
+  {
     accessorKey: 'mapUrl',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='MapURL' />

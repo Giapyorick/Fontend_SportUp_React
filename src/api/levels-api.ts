@@ -48,13 +48,13 @@ export const deleteLevel = async (id: number) => {
   return response.data
 }
 
-// 6. Delete multiple levels 
+// 6. Delete multiple levels
 export const deleteMultipleLevels = async (ids: number[]) => {
   const response = await api.post('/Levels/multi-delete', ids)
   return response.data
 }
 
-// 7. Import levels from Excel 
+// 7. Import levels from Excel
 export const importLevels = async (file: File) => {
   const formData = new FormData()
   formData.append('file', file)

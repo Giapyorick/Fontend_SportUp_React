@@ -14,7 +14,7 @@ type LevelMultiDeleteDialogProps<TData> = {
   open: boolean
   onOpenChange: (open: boolean) => void
   table: Table<TData>
-  onSuccess?: () => void | Promise<void> 
+  onSuccess?: () => void | Promise<void>
 }
 
 const CONFIRM_WORD = 'DELETE'
@@ -23,7 +23,7 @@ export function LevelsMultiDeleteDialog<TData>({
   open,
   onOpenChange,
   table,
-  onSuccess, 
+  onSuccess,
 }: LevelMultiDeleteDialogProps<TData>) {
   const [value, setValue] = useState('')
   const [loading, setLoading] = useState(false)

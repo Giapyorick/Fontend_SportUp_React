@@ -23,7 +23,7 @@ export function CategoriesMultiDeleteDialog<TData>({
   open,
   onOpenChange,
   table,
-  onSuccess
+  onSuccess,
 }: CategoryMultiDeleteDialogProps<TData>) {
   const [value, setValue] = useState('')
   const [loading, setLoading] = useState(false)

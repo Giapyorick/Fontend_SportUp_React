@@ -10,7 +10,7 @@ import { CategoriesDialogs } from './components/categories-dialogs'
 import { CategoriesPrimaryButtons } from './components/categories-primary-buttons'
 import { CategoryProvider } from './components/categories-provider'
 import { CategoriesTable } from './components/categories-table'
-import { type Category } from './data/schema' 
+import { type Category } from './data/schema'
 
 export function Categories() {
   const [data, setData] = useState<Category[]>([])

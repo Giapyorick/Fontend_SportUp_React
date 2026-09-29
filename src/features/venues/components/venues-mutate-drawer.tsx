@@ -182,7 +182,7 @@ export function VenuesMutateDrawer({
     setMapCoords({ lat, lng })
     const generatedUrl = `https://www.google.com/maps?q=${lat.toFixed(6)},${lng.toFixed(6)}`
     form.setValue('mapUrl', generatedUrl, { shouldValidate: true })
-    
+
     // Tự động gọi API tra cứu địa chỉ
     fetchAddressFromCoords(lat, lng)
   }
@@ -229,9 +229,11 @@ export function VenuesMutateDrawer({
         setMapCoords({ lat, lng })
         const generatedUrl = `https://www.google.com/maps?q=${lat.toFixed(6)},${lng.toFixed(6)}`
         form.setValue('mapUrl', generatedUrl, { shouldValidate: true })
-        
+
         if (data[0].display_name) {
-          form.setValue('address', data[0].display_name, { shouldValidate: true })
+          form.setValue('address', data[0].display_name, {
+            shouldValidate: true,
+          })
         }
         toast.success('Location found and address updated!')
       } else {
@@ -384,7 +386,8 @@ export function VenuesMutateDrawer({
                     <FormLabel>Address</FormLabel>
                     {fetchingAddress && (
                       <span className='flex items-center gap-1 text-[11px] text-muted-foreground'>
-                        <Loader2 className='h-3 w-3 animate-spin text-primary' /> Auto-detecting...
+                        <Loader2 className='h-3 w-3 animate-spin text-primary' />{' '}
+                        Auto-detecting...
                       </span>
                     )}
                   </div>

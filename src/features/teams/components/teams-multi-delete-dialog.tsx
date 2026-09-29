@@ -31,7 +31,9 @@ export function TeamsMultiDeleteDialog<TData>({
     try {
       const res = await deleteMultipleTeams(targetIds)
 
-      toast.success(res.message || `Deleted ${targetIds.length} teams successfully!`)
+      toast.success(
+        res.message || `Deleted ${targetIds.length} teams successfully!`
+      )
       onOpenChange(false)
 
       table.resetRowSelection()

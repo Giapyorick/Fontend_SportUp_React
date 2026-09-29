@@ -114,7 +114,7 @@ export function MatchesMutateDrawer({
     },
   })
 
- useEffect(() => {
+  useEffect(() => {
     if (open) {
       const fetchOptions = async () => {
         try {
@@ -244,7 +244,10 @@ export function MatchesMutateDrawer({
                 <FormItem>
                   <FormLabel>Match Title</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder='e.g., Friendly 5v5 Football Match' />
+                    <Input
+                      {...field}
+                      placeholder='e.g., Friendly 5v5 Football Match'
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -373,7 +376,9 @@ export function MatchesMutateDrawer({
                         onBlur={field.onBlur}
                         disabled={field.disabled}
                         value={field.value ?? 0}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                        onChange={(e) =>
+                          field.onChange(e.target.valueAsNumber || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -396,7 +401,9 @@ export function MatchesMutateDrawer({
                         onBlur={field.onBlur}
                         disabled={field.disabled}
                         value={field.value ?? 0}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                        onChange={(e) =>
+                          field.onChange(e.target.valueAsNumber || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -420,7 +427,9 @@ export function MatchesMutateDrawer({
                         onBlur={field.onBlur}
                         disabled={field.disabled}
                         value={field.value ?? 0}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                        onChange={(e) =>
+                          field.onChange(e.target.valueAsNumber || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />

@@ -1,6 +1,6 @@
-import api from './axios'
-import { teamsSchema, type Team } from '@/features/teams/data/schema'
 import { z } from 'zod'
+import { teamsSchema, type Team } from '@/features/teams/data/schema'
+import api from './axios'
 
 export type CreateTeamDto = {
   name: string
@@ -36,7 +36,10 @@ export const createTeam = async (data: CreateTeamDto): Promise<Team> => {
 }
 
 // 3. Update team
-export const updateTeam = async (id: number, data: CreateTeamDto): Promise<void> => {
+export const updateTeam = async (
+  id: number,
+  data: CreateTeamDto
+): Promise<void> => {
   const formData = new FormData()
 
   formData.append('Name', data.name)

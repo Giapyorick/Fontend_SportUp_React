@@ -34,9 +34,7 @@ export function DataTableBulkActions<TData>({
   const selectedRows = table.getFilteredSelectedRowModel().rows
 
   const handleBulkStatusChange = (status: string) => {
-    const selectedMatches = selectedRows.map(
-      (row) => row.original as Match
-    )
+    const selectedMatches = selectedRows.map((row) => row.original as Match)
     toast.promise(sleep(2000), {
       loading: 'Updating status...',
       success: () => {
@@ -50,9 +48,7 @@ export function DataTableBulkActions<TData>({
 
   const handleBulkExport = () => {
     // 1. Get a list of selected rows
-    const selectedMatches = selectedRows.map(
-      (row) => row.original as Match
-    )
+    const selectedMatches = selectedRows.map((row) => row.original as Match)
 
     if (selectedMatches.length === 0) {
       toast.error('please select aleast 1 row to export!')
@@ -63,20 +59,18 @@ export function DataTableBulkActions<TData>({
       // 2. Convert JSON data from selected rows to a sheet.
       const exportData = selectedMatches.map((item) => ({
         ID: item.id,
-        'Title': item.title,
+        Title: item.title,
         'Sport name': item.sportCategory?.name ?? '',
-        'Venue': item.venue?.name ?? '',
-        'Level': item.targetLevel?.name ?? '',
-        'Start': item.startTime
+        Venue: item.venue?.name ?? '',
+        Level: item.targetLevel?.name ?? '',
+        Start: item.startTime
           ? new Date(item.startTime).toLocaleString('vi-VN')
           : '',
-        'end': item.endTime
-          ? new Date(item.endTime).toLocaleString('vi-VN')
-          : '',
+        end: item.endTime ? new Date(item.endTime).toLocaleString('vi-VN') : '',
         'Total slot': item.totalSlots,
         'Available slot': item.availableSlots,
         'Price / slot (VNĐ)': item.pricePerSlot?.toLocaleString('vi-VN') ?? '0',
-        'Note': item.note ?? '',
+        Note: item.note ?? '',
       }))
 
       const worksheet = XLSX.utils.json_to_sheet(exportData)

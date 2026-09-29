@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { createTeam, updateTeam, type CreateTeamDto } from '@/api/teams-api'
 import { Button } from '@/components/ui/button'
-import { ImagePreviewModal } from '@/features/teams/components/image-preview-modal'
 import {
   Form,
   FormControl,
@@ -27,6 +26,7 @@ import {
 } from '@/components/ui/sheet'
 import { Textarea } from '@/components/ui/textarea'
 import { SelectDropdown } from '@/components/select-dropdown'
+import { ImagePreviewModal } from '@/features/teams/components/image-preview-modal'
 import { type Team } from '../data/schema'
 
 type TeamsMutateDrawerProps = {
@@ -76,7 +76,7 @@ export function TeamsMutateDrawer({
     previewUrl = currentRow.logoUrl
   }
 
-const onSubmit = async (data: TeamForm) => {
+  const onSubmit = async (data: TeamForm) => {
     setLoading(true)
     try {
       const fileToUpload = data.image?.[0] ?? null
@@ -168,14 +168,14 @@ const onSubmit = async (data: TeamForm) => {
                       {previewUrl && (
                         <div className='mt-1 flex items-center gap-3'>
                           {previewUrl && (
-                          <div className='mt-2 flex items-center gap-3'>
-                            <ImagePreviewModal
-                              src={previewUrl}
-                              alt='Logo preview'
-                              className='h-16 w-16 rounded-md border border-border'
-                            />
-                          </div>
-                        )}
+                            <div className='mt-2 flex items-center gap-3'>
+                              <ImagePreviewModal
+                                src={previewUrl}
+                                alt='Logo preview'
+                                className='h-16 w-16 rounded-md border border-border'
+                              />
+                            </div>
+                          )}
                           <span className='text-xs text-muted-foreground'>
                             Logo Preview
                           </span>

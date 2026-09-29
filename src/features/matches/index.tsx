@@ -10,7 +10,7 @@ import { MatchesDialogs } from './components/matches-dialogs'
 import { MatchesPrimaryButtons } from './components/matches-primary-buttons'
 import { MatchProvider } from './components/matches-provider'
 import { MatchesTable } from './components/matches-table'
-import { type Match } from './data/schema' 
+import { type Match } from './data/schema'
 
 export function Matches() {
   const [data, setData] = useState<Match[]>([])

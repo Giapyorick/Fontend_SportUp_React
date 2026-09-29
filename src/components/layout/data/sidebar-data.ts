@@ -62,7 +62,7 @@ export const sidebarData: SidebarData = {
           url: '/tasks',
           icon: ListTodo,
         },
-                {
+        {
           title: 'Levels',
           url: '/levels',
           icon: ListTodo,

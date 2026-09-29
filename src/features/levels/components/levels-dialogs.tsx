@@ -7,7 +7,7 @@ import { LevelsMutateDrawer } from './levels-mutate-drawer'
 import { useLevels } from './levels-provider'
 
 type LevelsDialogsProps = {
-  onSuccess?: () => void | Promise<void> 
+  onSuccess?: () => void | Promise<void>
 }
 
 export function LevelsDialogs({ onSuccess }: LevelsDialogsProps) {
@@ -73,7 +73,7 @@ export function LevelsDialogs({ onSuccess }: LevelsDialogsProps) {
               }
             }}
             currentRow={currentRow}
-            onSuccess={onSuccess} 
+            onSuccess={onSuccess}
           />
 
           {/* Delete confirmation Dialog */}

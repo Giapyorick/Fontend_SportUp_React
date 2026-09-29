@@ -51,13 +51,13 @@ const formSchema = z.object({
 type LevelImportDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSuccess?: () => void | Promise<void> 
+  onSuccess?: () => void | Promise<void>
 }
 
 export function LevelsImportDialog({
   open,
   onOpenChange,
-  onSuccess
+  onSuccess,
 }: LevelImportDialogProps) {
   const [loading, setLoading] = useState(false)
 
@@ -115,10 +115,7 @@ export function LevelsImportDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form
-            id='level-import-form'
-            onSubmit={form.handleSubmit(onSubmit)}
-          >
+          <form id='level-import-form' onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name='file'
