@@ -31,6 +31,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { type Venue } from '../data/schema'
 
+// Tọa độ mặc định: HCM (10.776889, 106.700806) - Đưa ra ngoài component để tránh re-render
+const DEFAULT_COORDS = { lat: 10.776889, lng: 106.700806 }
+
 // Fix Icon đường dẫn mặc định của Leaflet trong React
 const customIcon = new L.Icon({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -108,13 +111,10 @@ export function VenuesMutateDrawer({
   const [fetchingAddress, setFetchingAddress] = useState(false)
   const [searchLocation, setSearchLocation] = useState('')
 
-  // Tọa độ mặc định: HCM (10.776889, 106.700806)
-  const defaultCoords = { lat: 10.776889, lng: 106.700806 }
-
-  // Khởi tạo state ban đầu bằng Lazy Initializer
+  // Khởi tạo state ban đầu bằng Lazy Initializer với DEFAULT_COORDS
   const [mapCoords, setMapCoords] = useState<{ lat: number; lng: number }>(
     () => {
-      return extractCoordsFromUrl(currentRow?.mapUrl) || defaultCoords
+      return extractCoordsFromUrl(currentRow?.mapUrl) || DEFAULT_COORDS
     }
   )
 
@@ -132,7 +132,7 @@ export function VenuesMutateDrawer({
   useEffect(() => {
     if (open) {
       if (currentRow) {
-        const coords = extractCoordsFromUrl(currentRow.mapUrl) || defaultCoords
+        const coords = extractCoordsFromUrl(currentRow.mapUrl) || DEFAULT_COORDS
         form.reset({
           name: currentRow.name || '',
           address: currentRow.address || '',
@@ -151,7 +151,7 @@ export function VenuesMutateDrawer({
           status: 'Active',
         })
         queueMicrotask(() => {
-          setMapCoords(defaultCoords)
+          setMapCoords(DEFAULT_COORDS)
         })
       }
     }
@@ -169,7 +169,7 @@ export function VenuesMutateDrawer({
         form.setValue('address', data.display_name, { shouldValidate: true })
         toast.success('Address auto-filled from map location!')
       }
-    } catch (error) {
+    } catch (error: unknown) {
       // eslint-disable-next-line no-console
       console.error('Failed to fetch address:', error)
     } finally {
@@ -196,7 +196,7 @@ export function VenuesMutateDrawer({
           const lng = position.coords.longitude
           handleSelectLocationOnMap(lat, lng)
         },
-        (error) => {
+        (error: unknown) => {
           // eslint-disable-next-line no-console
           console.error(error)
           toast.error(
@@ -268,7 +268,7 @@ export function VenuesMutateDrawer({
       if (onSuccess) {
         await onSuccess()
       }
-    } catch (error) {
+    } catch (error: unknown) {
       // eslint-disable-next-line no-console
       console.error('An error occurred while saving:', error)
       toast.error('An error occurred, please try again!')

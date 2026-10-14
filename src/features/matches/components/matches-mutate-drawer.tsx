@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { z } from 'zod'
+import type { AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
@@ -246,11 +247,10 @@ export function MatchesMutateDrawer({
       if (onSuccess) {
         await onSuccess()
       }
-    } catch (error: any) {
-      // eslint-disable-next-line no-console
-      console.error('An error occurred while saving match:', error)
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message?: string }>
       const serverMessage =
-        error.response?.data?.message || 'An error occurred, please try again!'
+        err.response?.data?.message || 'An error occurred, please try again!'
       toast.error(serverMessage)
     } finally {
       setLoading(false)

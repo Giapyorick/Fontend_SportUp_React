@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { getTeams } from '@/api/teams-api'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
@@ -15,7 +15,7 @@ function TeamsContent() {
   const { teams, setTeams } = useTeams()
   const [loading, setLoading] = useState(true)
 
-  const handleFetchTeams = async () => {
+  const handleFetchTeams = useCallback(async () => {
     try {
       const result = await getTeams()
       setTeams(result)
@@ -25,11 +25,11 @@ function TeamsContent() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     handleFetchTeams()
-  }, [])
+  }, [handleFetchTeams])
 
   return (
     <>

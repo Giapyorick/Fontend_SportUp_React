@@ -12,6 +12,17 @@ import { LevelProvider } from './components/levels-provider'
 import { LevelsTable } from './components/levels-table'
 import { type Level } from './data/schema'
 
+interface RawLevelItem {
+  id: number
+  name: string
+  description?: string | null
+  status?: string | null
+}
+
+interface ApiLevelsResponse {
+  data?: RawLevelItem[]
+}
+
 export function Levels() {
   const [data, setData] = useState<Level[]>([])
   const [loading, setLoading] = useState(true)
@@ -31,11 +42,16 @@ export function Levels() {
 
         if (!ignore) {
           // 1. Kiểm tra & đảm bảo dữ liệu nhận về luôn là mảng
-          const rawList: any[] = Array.isArray(result)
-            ? result
-            : Array.isArray((result as any)?.data)
-              ? (result as any).data
-              : []
+          let rawList: RawLevelItem[] = []
+
+          if (Array.isArray(result)) {
+            rawList = result as RawLevelItem[]
+          } else if (result && typeof result === 'object' && 'data' in result) {
+            const apiRes = result as ApiLevelsResponse
+            if (Array.isArray(apiRes.data)) {
+              rawList = apiRes.data
+            }
+          }
 
           // 2. Format dữ liệu chuẩn theo Schema
           const formattedData: Level[] = rawList.map((item) => ({

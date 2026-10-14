@@ -7,6 +7,7 @@ import React, {
 import { jwtDecode } from 'jwt-decode'
 import api from '../api/axios'
 
+// Cấu trúc JWT Claims mặc định của ASP.NET Core
 interface JwtPayload {
   'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier': string
   'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': string
@@ -20,19 +21,21 @@ export interface User {
   role: string
 }
 
-interface AuthContextType {
+// THÊM export trước AuthContextType để các file khác (hooks, components) có thể import
+export interface AuthContextType {
   user: User | null
   login: (username: string, password: string) => Promise<User>
   logout: () => Promise<void>
 }
 
-const AuthContext = createContext<AuthContextType | null>(null)
+// THÊM export cho AuthContext để hook useAuth ở file khác có thể đọc Context
+export const AuthContext = createContext<AuthContextType | null>(null)
 
 interface AuthProviderProps {
   children: ReactNode
 }
 
-// Hàm bổ trợ đọc user từ localStorage đồng bộ
+// Hàm đọc user từ localStorage
 const getInitialUser = (): User | null => {
   const token = localStorage.getItem('accessToken')
   if (!token) return null
@@ -60,7 +63,6 @@ const getInitialUser = (): User | null => {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // Đọc state ban đầu đồng bộ thông qua lazy initialization
   const [user, setUser] = useState<User | null>(getInitialUser)
 
   const login = async (username: string, password: string): Promise<User> => {
@@ -91,9 +93,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = async (): Promise<void> => {
     try {
       await api.post('/auth/logout')
-    } catch (e) {
+    } catch (e: unknown) {
       // eslint-disable-next-line no-console
-      console.error(e)
+      console.error('Logout error:', e)
     } finally {
       localStorage.removeItem('accessToken')
       setUser(null)

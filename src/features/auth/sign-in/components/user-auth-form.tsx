@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { z } from 'zod'
+import type { AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate, useRouter } from '@tanstack/react-router'
@@ -74,12 +75,13 @@ export function UserAuthForm({
       // 5. Điều hướng thẳng về trang chủ (hoặc trang lưu trước đó)
       const targetPath = redirectTo || '/'
       await navigate({ to: targetPath, replace: true })
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message?: string }>
       const errorMessage =
-        error.response?.data?.message ||
-        (error.message === 'Network Error'
-          ? 'Cannot connect to backend server. Please check your network connection.'
-          : 'Login failed. Please check your credentials.')
+        err.response?.data?.message ||
+        (err.message === 'Network Error'
+          ? 'Cannot connect to backend server.'
+          : 'Login failed. Please try again.')
 
       toast.error(errorMessage)
     } finally {
