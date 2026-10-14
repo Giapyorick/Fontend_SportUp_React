@@ -1,11 +1,16 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 
+// 1. Kiểm tra & đảm bảo BASE_URL luôn trỏ đúng domain RunASP.net
+const rawApiUrl = import.meta.env.VITE_API_URL
+
 const BASE_URL =
-  import.meta.env.VITE_API_URL || 'https://sportupdb.runasp.net/api'
+  !rawApiUrl || rawApiUrl.startsWith('/') || rawApiUrl.trim() === ''
+    ? 'https://sportupdb.runasp.net/api'
+    : rawApiUrl
 
 const api = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true, // Bắt buộc gửi/nhận RefreshToken Cookie
+  withCredentials: true, // Bắt buộc để gửi & nhận RefreshToken Cookie
 })
 
 interface QueueItem {
@@ -31,19 +36,23 @@ const processQueue = (error: unknown, token: string | null = null): void => {
   failedQueue = []
 }
 
-// Request Interceptor: Gắn AccessToken vào Header
+// 2. Request Interceptor: Gắn AccessToken sạch vào Header
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('accessToken')
-    if (token) {
+    let token = localStorage.getItem('accessToken')
+
+    if (token && token !== 'undefined' && token !== 'null') {
+      // Làm sạch token (loại bỏ tiền tố Bearer thừa nếu có)
+      token = token.replace(/^Bearer\s+/i, '').trim()
       config.headers.Authorization = `Bearer ${token}`
     }
+
     return config
   },
   (error: AxiosError) => Promise.reject(error)
 )
 
-// Response Interceptor: Xử lý khi bị lỗi 401
+// 3. Response Interceptor: Tự động refresh token khi 401
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
@@ -56,7 +65,7 @@ api.interceptors.response.use(
     ) {
       const requestUrl = (originalRequest.url || '').toLowerCase()
 
-      // Nếu chính API Refresh Token hoặc Login bị 401 -> Xóa Token & chuyển về trang Login
+      // Nếu chính API Refresh Token hoặc Login bị 401 -> Xóa Token & chuyển về /sign-in
       if (
         requestUrl.includes('/auth/refresh-token') ||
         requestUrl.includes('/auth/login')
@@ -82,21 +91,21 @@ api.interceptors.response.use(
       isRefreshing = true
 
       try {
-        // Chú ý: Dùng endpoint /Auth/refresh-token chuẩn viết hoa
+        // Gọi API refresh-token với endpoint chuẩn /Auth/refresh-token
         const res = await api.post('/Auth/refresh-token')
 
-        // Bọc fallback lấy token từ res.data.accessToken hoặc res.data.token
-        const newAccessToken = res.data?.accessToken || res.data?.token
+        const rawToken = res.data?.accessToken || res.data?.token
+        const newAccessToken =
+          typeof rawToken === 'string'
+            ? rawToken.replace(/^Bearer\s+/i, '').trim()
+            : null
 
         if (!newAccessToken) {
-          throw new Error(
-            'No access token returned from refresh token endpoint'
-          )
+          throw new Error('No access token returned from refresh token endpoint')
         }
 
         localStorage.setItem('accessToken', newAccessToken)
-        api.defaults.headers.common['Authorization'] =
-          `Bearer ${newAccessToken}`
+        api.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`
 
         processQueue(null, newAccessToken)
         isRefreshing = false
