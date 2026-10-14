@@ -28,6 +28,7 @@ const queryClient = new QueryClient({
         if (failureCount >= 0 && import.meta.env.DEV) return false
         if (failureCount > 3 && import.meta.env.PROD) return false
 
+        // Không retry nếu lỗi 401 hoặc 403
         return !(
           error instanceof AxiosError &&
           [401, 403].includes(error.response?.status ?? 0)
@@ -51,21 +52,24 @@ const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) => {
       if (error instanceof AxiosError) {
+        // Chỉ bắt 401 khi Axios Interceptor đã thử Refresh Token thất bại hoàn toàn
         if (error.response?.status === 401) {
-          toast.error('Session expired!')
-          useAuthStore.getState().auth.reset()
+          toast.error('Phiên đăng nhập đã hết hạn!')
+
+          // Reset Auth Store Zustand nếu có
+          if (useAuthStore.getState().auth?.reset) {
+            useAuthStore.getState().auth.reset()
+          }
+
           const redirect = `${router.history.location.href}`
           router.navigate({ to: '/sign-in', search: { redirect } })
         }
+
         if (error.response?.status === 500) {
           toast.error('Internal Server Error!')
-          // Only navigate to error page in production to avoid disrupting HMR in development
           if (import.meta.env.PROD) {
             router.navigate({ to: '/500' })
           }
-        }
-        if (error.response?.status === 403) {
-          // router.navigate("/forbidden", { replace: true });
         }
       }
     },

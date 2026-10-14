@@ -26,13 +26,25 @@ export function Levels() {
 
     async function load() {
       try {
+        setLoading(true)
         const result = await getLevels()
+
         if (!ignore) {
-          const formattedData: Level[] = result.map((item) => ({
-            ...item,
+          // 1. Kiểm tra & đảm bảo dữ liệu nhận về luôn là mảng
+          const rawList: any[] = Array.isArray(result)
+            ? result
+            : Array.isArray((result as any)?.data)
+              ? (result as any).data
+              : []
+
+          // 2. Format dữ liệu chuẩn theo Schema
+          const formattedData: Level[] = rawList.map((item) => ({
+            id: item.id,
+            name: item.name,
             description: item.description ?? '',
-            status: item.status ?? 'active',
+            status: item.status ?? 'Active',
           }))
+
           setData(formattedData)
         }
       } catch (error) {
@@ -73,7 +85,9 @@ export function Levels() {
         </div>
 
         {loading ? (
-          <div>Loading data...</div>
+          <div className='flex items-center justify-center py-10 text-muted-foreground'>
+            Loading data...
+          </div>
         ) : (
           <LevelsTable data={data} onSuccess={handleSuccess} />
         )}
@@ -83,3 +97,5 @@ export function Levels() {
     </LevelProvider>
   )
 }
+
+export default Levels

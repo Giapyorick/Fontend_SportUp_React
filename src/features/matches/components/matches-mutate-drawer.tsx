@@ -41,6 +41,17 @@ type MatchesMutateDrawerProps = {
   onSuccess?: () => void | Promise<void>
 }
 
+// Helper function to check if an hour is within allowed ranges (6-10 or 15-23)
+const isHourAllowed = (dateStr: string) => {
+  if (!dateStr) return true
+  const date = new Date(dateStr)
+  const hour = date.getHours()
+  // Allowed ranges: 06:00 - 10:00 and 15:00 - 23:00
+  const isMorning = hour >= 6 && hour < 10
+  const isEvening = hour >= 15 && hour < 23
+  return isMorning || isEvening
+}
+
 const formSchema = z
   .object({
     title: z.string().min(1, 'Title is required.'),
@@ -51,7 +62,9 @@ const formSchema = z
     endTime: z.string().min(1, 'End time is required.'),
     totalSlots: z.number().min(1, 'Total slots must be at least 1.'),
     availableSlots: z.number().min(0, 'Available slots cannot be negative.'),
-    pricePerSlot: z.number().min(0, 'Price cannot be negative.'),
+    pricePerSlot: z
+      .number({ message: 'Price must be a number.' })
+      .min(50000, 'Minimum price per slot is 50,000 VND.'),
     note: z.string().optional(),
   })
   // Rule 1: End Time > Start Time
@@ -65,7 +78,31 @@ const formSchema = z
       path: ['endTime'],
     }
   )
-  // Rule 2: Total Slots >= Available Slots
+  // Rule 2: Minimum 30 minutes duration
+  .refine(
+    (data) => {
+      if (!data.startTime || !data.endTime) return true
+      const diffInMinutes =
+        (new Date(data.endTime).getTime() -
+          new Date(data.startTime).getTime()) /
+        (1000 * 60)
+      return diffInMinutes >= 30
+    },
+    {
+      message: 'Start time and end time must be at least 30 minutes apart.',
+      path: ['endTime'],
+    }
+  )
+  // Rule 3: Allowed operating hours (06:00-10:00 or 15:00-23:00)
+  .refine((data) => isHourAllowed(data.startTime), {
+    message: 'Start time must be between 06:00 - 10:00 or 15:00 - 23:00.',
+    path: ['startTime'],
+  })
+  .refine((data) => isHourAllowed(data.endTime), {
+    message: 'End time must be between 06:00 - 10:00 or 15:00 - 23:00.',
+    path: ['endTime'],
+  })
+  // Rule 4: Total Slots >= Available Slots
   .refine(
     (data) => {
       return Number(data.totalSlots) >= Number(data.availableSlots)
@@ -109,7 +146,7 @@ export function MatchesMutateDrawer({
       endTime: '',
       totalSlots: 10,
       availableSlots: 10,
-      pricePerSlot: 0,
+      pricePerSlot: 50000,
       note: '',
     },
   })
@@ -155,7 +192,10 @@ export function MatchesMutateDrawer({
           endTime: formatDateTime(currentRow.endTime),
           totalSlots: currentRow.totalSlots ?? 10,
           availableSlots: currentRow.availableSlots ?? 10,
-          pricePerSlot: currentRow.pricePerSlot ?? 0,
+          pricePerSlot:
+            currentRow.pricePerSlot && currentRow.pricePerSlot >= 50000
+              ? currentRow.pricePerSlot
+              : 50000,
           note: currentRow.note || '',
         })
       } else {
@@ -168,7 +208,7 @@ export function MatchesMutateDrawer({
           endTime: '',
           totalSlots: 10,
           availableSlots: 10,
-          pricePerSlot: 0,
+          pricePerSlot: 50000,
           note: '',
         })
       }
@@ -206,10 +246,12 @@ export function MatchesMutateDrawer({
       if (onSuccess) {
         await onSuccess()
       }
-    } catch (error) {
+    } catch (error: any) {
       // eslint-disable-next-line no-console
       console.error('An error occurred while saving match:', error)
-      toast.error('An error occurred, please try again!')
+      const serverMessage =
+        error.response?.data?.message || 'An error occurred, please try again!'
+      toast.error(serverMessage)
     } finally {
       setLoading(false)
     }
@@ -358,6 +400,10 @@ export function MatchesMutateDrawer({
                 )}
               />
             </div>
+            <p className='text-xs text-muted-foreground'>
+              * Allowed time slots: 06:00 - 10:00 (Morning) and 15:00 - 23:00
+              (Evening).
+            </p>
 
             {/* Slots & Price */}
             <div className='grid grid-cols-3 gap-3'>
@@ -375,7 +421,7 @@ export function MatchesMutateDrawer({
                         name={field.name}
                         onBlur={field.onBlur}
                         disabled={field.disabled}
-                        value={field.value ?? 0}
+                        value={field.value ?? 10}
                         onChange={(e) =>
                           field.onChange(e.target.valueAsNumber || 0)
                         }
@@ -400,7 +446,7 @@ export function MatchesMutateDrawer({
                         name={field.name}
                         onBlur={field.onBlur}
                         disabled={field.disabled}
-                        value={field.value ?? 0}
+                        value={field.value ?? 10}
                         onChange={(e) =>
                           field.onChange(e.target.valueAsNumber || 0)
                         }
@@ -421,14 +467,14 @@ export function MatchesMutateDrawer({
                     <FormControl>
                       <Input
                         type='number'
-                        min={0}
-                        step={1000}
+                        min={50000}
+                        step={10000}
                         name={field.name}
                         onBlur={field.onBlur}
                         disabled={field.disabled}
-                        value={field.value ?? 0}
+                        value={field.value ?? 50000}
                         onChange={(e) =>
-                          field.onChange(e.target.valueAsNumber || 0)
+                          field.onChange(e.target.valueAsNumber || 50000)
                         }
                       />
                     </FormControl>

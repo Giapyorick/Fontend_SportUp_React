@@ -13,10 +13,24 @@ export type CreateLevelDto = {
   status?: string
 }
 
-// 1. Get all levels
+// 1. Get all levels - Tự động bóc tách mảng từ mọi cấu trúc response Backend
 export const getLevels = async (): Promise<Level[]> => {
-  const response = await api.get('/Levels')
-  return response.data
+  const res = await api.get('/Levels')
+  const data = res.data
+
+  // Nếu Backend trả về mảng trực tiếp: [...]
+  if (Array.isArray(data)) {
+    return data
+  }
+
+  // Nếu Backend trả về Object bọc mảng: { data: [...] } hoặc { items: [...] } hoặc { result: [...] }
+  if (data && typeof data === 'object') {
+    if (Array.isArray(data.data)) return data.data
+    if (Array.isArray(data.items)) return data.items
+    if (Array.isArray(data.result)) return data.result
+  }
+
+  return []
 }
 
 // 2. Get a level by id
