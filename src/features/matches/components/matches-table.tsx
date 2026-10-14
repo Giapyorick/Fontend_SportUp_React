@@ -23,7 +23,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { statuses } from '../data/data'
 import { type Match } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { matchesColumns as columns } from './matches-columns'
@@ -62,13 +61,8 @@ export function MatchesTable({ data, onSuccess }: DataTableProps) {
       key: 'filter',
     },
 
-    columnFilters: [
-      {
-        columnId: 'status',
-        searchKey: 'status',
-        type: 'array',
-      },
-    ],
+    // 👈 Bỏ columnFilters liên quan tới status
+    columnFilters: [],
   })
 
   const table = useReactTable({
@@ -90,13 +84,14 @@ export function MatchesTable({ data, onSuccess }: DataTableProps) {
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
 
+    // 👈 Sửa globalFilterFn tìm theo 'title' thay vì 'name'
     globalFilterFn: (row, _columnId, filterValue) => {
-      const id = String(row.getValue('id')).toLowerCase()
-      const name = String(row.getValue('name')).toLowerCase()
+      const id = String(row.getValue('id') ?? '').toLowerCase()
+      const title = String(row.getValue('title') ?? '').toLowerCase()
 
       const search = String(filterValue).toLowerCase()
 
-      return id.includes(search) || name.includes(search)
+      return id.includes(search) || title.includes(search)
     },
 
     getCoreRowModel: getCoreRowModel(),
@@ -124,16 +119,10 @@ export function MatchesTable({ data, onSuccess }: DataTableProps) {
         'flex flex-1 flex-col gap-4'
       )}
     >
+      {/* 👈 Bỏ bớt prop filters chứa status, cập nhật placeholder tìm kiếm */}
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Filter by name or ID...'
-        filters={[
-          {
-            columnId: 'status',
-            title: 'Status',
-            options: statuses,
-          },
-        ]}
+        searchPlaceholder='Filter by title or ID...'
       />
 
       <div className='overflow-hidden rounded-md border'>

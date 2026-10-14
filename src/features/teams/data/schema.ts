@@ -1,7 +1,9 @@
 // teams/data/schema.ts
 import { z } from 'zod'
 
-export const teamStatusEnum = z.enum(['active', 'inactive'])
+export const teamStatusEnum = z
+  .string()
+  .transform((val) => val.toLowerCase() as 'active' | 'inactive')
 
 export const teamsSchema = z.object({
   id: z.number(),
