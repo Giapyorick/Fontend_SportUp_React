@@ -1,9 +1,11 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://localhost:7022/api'
+const BASE_URL =
+  import.meta.env.VITE_API_URL || 'https://sportupdb.runasp.net/api'
+
 const api = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true, // Để gửi & nhận HttpOnly Cookie (RefreshToken)
+  withCredentials: true, // Bắt buộc gửi/nhận RefreshToken Cookie
 })
 
 interface QueueItem {
@@ -41,7 +43,7 @@ api.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error)
 )
 
-// Response Interceptor: Tự động gọi Refresh Token khi bị lỗi 401
+// Response Interceptor: Xử lý khi bị lỗi 401
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
@@ -52,10 +54,12 @@ api.interceptors.response.use(
       originalRequest &&
       !originalRequest._retry
     ) {
-      // Nếu chính API Refresh Token hoặc Login bị lỗi 401 -> Cho hết hạn & về /sign-in
+      const requestUrl = (originalRequest.url || '').toLowerCase()
+
+      // Nếu chính API Refresh Token hoặc Login bị 401 -> Xóa Token & chuyển về trang Login
       if (
-        originalRequest.url?.includes('/auth/refresh-token') ||
-        originalRequest.url?.includes('/auth/login')
+        requestUrl.includes('/auth/refresh-token') ||
+        requestUrl.includes('/auth/login')
       ) {
         localStorage.removeItem('accessToken')
         window.location.href = '/sign-in'
@@ -78,10 +82,17 @@ api.interceptors.response.use(
       isRefreshing = true
 
       try {
-        const res = await api.post<{ accessToken: string }>(
-          '/auth/refresh-token'
-        )
-        const newAccessToken = res.data.accessToken
+        // Chú ý: Dùng endpoint /Auth/refresh-token chuẩn viết hoa
+        const res = await api.post('/Auth/refresh-token')
+
+        // Bọc fallback lấy token từ res.data.accessToken hoặc res.data.token
+        const newAccessToken = res.data?.accessToken || res.data?.token
+
+        if (!newAccessToken) {
+          throw new Error(
+            'No access token returned from refresh token endpoint'
+          )
+        }
 
         localStorage.setItem('accessToken', newAccessToken)
         api.defaults.headers.common['Authorization'] =
